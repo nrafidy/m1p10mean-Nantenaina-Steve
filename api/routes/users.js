@@ -18,9 +18,21 @@ router.get("/me", async function (req, res) {
       if (err) {
         res.status(500).json("Error fetching records!");
       } else {
-        var user = result[0]['user'];
-        user['password'] = '';
-        res.status(200).json(user);
+        let now = new Date();
+        // console.log(result[0]['datePeremption']);
+        now = Date.parse(now.toString());
+
+        const datePeremption = Date.parse(result[0]['datePeremption']);
+
+        if(datePeremption-now > 0) {
+            var user = result[0]['user'];
+            user['password'] = '';
+            res.status(200).json(user);
+        }else{
+            res.status(500).json({'message':'need to relog'})
+        }
+
+        
       }
     });
     

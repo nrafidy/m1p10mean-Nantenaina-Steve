@@ -62,8 +62,14 @@ router.post("/login", function (req, res)  {
     if (err) {
       res.status(500).json("Error fetching records!");
     } else {
+      const date = new Date();
+      console.log(date);
+      date.setDate(date.getDate() + 5);
+      console.log(date.getDate());
+      
       let token = {
           user : result[0],
+          datePeremption : date
       }
       dbConnect.collection("token").insertOne(token, function (err, result1) {
       if (err) {
