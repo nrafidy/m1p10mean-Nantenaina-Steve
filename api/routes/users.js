@@ -1,22 +1,29 @@
 const router = require("express").Router();
 const dbo = require("../db/connect");
 
-router.post("/inscription", function (req, res)  {
-    const dbConnect = dbo.getDb();
-    let user = {
-        firstname : req.body.firstname,
-        lastname : req.body.lastname,
-        email : req.body.email,
-        password : req.body.password,
-        type: 'client'
+var mongoose = require('mongoose');
+var id = mongoose.Types.ObjectId('4edd40c86762e0fb12000003');
+
+router.get("/me", async function (req, res) {
+    const db = dbo.getDb();
+
+    const token = req.body.access_token;
+    
+    let tok = {
+        _id : mongoose.Types.ObjectId(token)
     }
-    dbConnect.collection("User").insertOne(user, function (err, result) {
-        if (err) {
-          res.status(500).json("Error inserting matches!");
-        } else {
-          res.status(200).json(result);
-        }
-      });
-});
+    let tokenFinal = db.collection("token")
+    .find(tok)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(500).json("Error fetching records!");
+      } else {
+        var user = result[0]['user'];
+        user['password'] = '';
+        res.status(200).json(user);
+      }
+    });
+    
+  });
 
 module.exports = router;
