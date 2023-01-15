@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import './customize-bootstrap.scss';
+@import 'bootstrap/scss/bootstrap';
+
+@font-face {
+  font-family: 'poppins';
+  src: url('../src/assets/fonts/Poppins-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'poppins';
+  src: url('../src/assets/fonts/Poppins-Bold.ttf');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'poppins';
+  src: url('../src/assets/fonts/Poppins-Italic.ttf');
+  font-weight: normal;
+  font-style: italic;
+}
