@@ -3,6 +3,9 @@ const dbo = require("./db/connect");
 
 const authRoute = require("./routes/auth");
 
+const userRoute = require("./routes/users");
+
+
 const fs = require("fs");
 const path = require("path");
 const env = JSON.parse(
@@ -16,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
 
 dbo.connectToServer(function (err) {
   if (err) {
