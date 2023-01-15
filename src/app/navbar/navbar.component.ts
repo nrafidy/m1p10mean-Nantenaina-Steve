@@ -9,4 +9,6 @@ import { faPhoneVolume, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 export class NavbarComponent {
   faPhoneVolume = faPhoneVolume;
   faLocationDot = faLocationDot;
+
+  isMenuCollapsed = true;
 }

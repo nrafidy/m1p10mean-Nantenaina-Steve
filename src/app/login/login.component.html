@@ -1,0 +1,80 @@
+<ng-template #loginContent let-loginModal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-login-title">{{pageShown === 'login' ? 'Connectez-vous à votre compte' : 'Créer un compte'}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="loginModal.dismiss('Cross click')"></button>
+  </div>
+
+  <!-- login -->
+  <div *ngIf="pageShown === 'login'">
+    <div class="modal-body">
+      <form class="login-form" #login="ngForm" (ngSubmit)="loginSubmit()">
+        <div class="form-group">
+          <label for="email">Votre email</label>
+          <input #emailField="ngModel" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Tapez votre adresse email" required [(ngModel)]="email" name="email" email>
+          <div *ngIf="!emailField.valid && emailField.touched">
+            <small *ngIf="emailField.errors?.['required']">Votre email est requis.</small>
+            <small *ngIf="emailField.errors?.['email']">Veuillez saisir une adresse email valide.</small>
+          </div>
+          <small id="emailHelp" class="form-text text-muted">Nous ne partagerons jamais vos coordonnées.</small>
+        </div>
+        <div class="form-group mt-3">
+          <label for="mdp">Votre Mot de passe</label>
+          <input  #pwdField="ngModel" type="password" class="form-control" id="mdp" placeholder="Tapez votre mot de passe" required [(ngModel)]="password" name="password">
+          <div *ngIf="!pwdField.valid && pwdField.touched">
+            <small *ngIf="pwdField.errors?.['required']">Votre mot de passe est requis.</small>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-secondary mt-3" [disabled]="!login.form.valid">Se connecter</button>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <span>Vous n'avez pas encore de compte ? Inscrivez-vous.</span>
+      <button type="button" class="btn btn-outline-primary" (click)="pageShown = 'signup'">S'inscrire</button>
+    </div>
+  </div>
+
+  <!-- signup -->
+  <div *ngIf="pageShown === 'signup'">
+    <div class="modal-body">
+      <form class="login-form" #signup="ngForm" (ngSubmit)="signupSubmit()">
+        <div class="form-group">
+          <label for="lastname">Votre nom</label>
+          <input #lastnameField="ngModel" type="text" class="form-control" id="lastname" aria-describedby="lastname" placeholder="Tapez votre nom" required [(ngModel)]="lastname" name="lastname">
+          <div *ngIf="!lastnameField.valid && lastnameField.touched">
+            <small *ngIf="lastnameField.errors?.['required']">Votre nom est requis.</small>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="firstname">Votre prénom</label>
+          <input #firstnameField="ngModel" type="text" class="form-control" id="firstname" aria-describedby="firstname" placeholder="Tapez votre prénom" required [(ngModel)]="firstname" name="firstname">
+          <div *ngIf="!firstnameField.valid && firstnameField.touched">
+            <small *ngIf="firstnameField.errors?.['required']">Votre prénom est requis.</small>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="email-sign">Votre email</label>
+          <input #emailField="ngModel" type="email-sign" class="form-control" id="email-sign" aria-describedby="email-sign" placeholder="Tapez votre adresse email" required [(ngModel)]="email" name="email" email>
+          <div *ngIf="!emailField.valid && emailField.touched">
+            <small *ngIf="emailField.errors?.['required']">Votre email est requis.</small>
+            <small *ngIf="emailField.errors?.['email']">Veuillez saisir une adresse email valide.</small>
+          </div>
+          <small id="email-sign" class="form-text text-muted">Nous ne partagerons jamais vos coordonnées.</small>
+        </div>
+        <div class="form-group mt-3">
+          <label for="mdp-sign">Votre Mot de passe</label>
+          <input #pwdField="ngModel" type="password" class="form-control" id="mdp-sign" placeholder="Créez un mot de passe" required [(ngModel)]="password" name="password">
+          <div *ngIf="!pwdField.valid && pwdField.touched">
+            <small *ngIf="pwdField.errors?.['required']">Votre mot de passe est requis.</small>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-secondary mt-3" [disabled]="!signup.form.valid">S'inscrire</button>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <span>Vous avez déjà un compte ? Connectez-vous.</span>
+      <button type="button" class="btn btn-outline-primary" (click)="pageShown = 'login'">Se connecter</button>
+    </div>
+  </div>
+</ng-template>
+
+<button class="btn btn-primary" (click)="open(loginContent)">Se connecter</button>
