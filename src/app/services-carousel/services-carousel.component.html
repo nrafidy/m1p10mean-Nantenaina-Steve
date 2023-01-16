@@ -1,0 +1,20 @@
+<div class="container-fluid p-0" id="service-home">
+    <div class="d-flex flex-wrap">
+      <div class="service-item col-6 d-flex" *ngFor="let service of services_1" >
+        <div class="service-item-left col-6 {{service.class}} d-flex flex-column justify-content-around">
+          <h3>{{service.h3}}</h3>
+          <p>{{service.p}}</p>
+          <button type="button" class="btn btn-outline-light">Réserver</button>
+        </div>
+        <img class="service-item-right col-6" src="{{service.img}}" alt="">
+      </div>
+      <div class="service-item col-6 d-flex" *ngFor="let service of services_2" >
+        <img class="service-item-right col-6" src="{{service.img}}" alt="">
+        <div class="service-item-left col-6 {{service.class}} d-flex flex-column justify-content-around">
+          <h3>{{service.h3}}</h3>
+          <p>{{service.p}}</p>
+          <button type="button" class="btn btn-outline-light">Réserver</button>
+        </div>
+      </div>
+    </div>
+</div>

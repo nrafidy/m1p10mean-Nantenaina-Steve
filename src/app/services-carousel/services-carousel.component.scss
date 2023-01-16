@@ -1,0 +1,23 @@
+@import "../../variables";
+
+.service-item{
+  height: 400px;
+}
+
+.impair{
+  background-color: $primary;
+}
+
+.pair{
+  background-color: $secondary;
+}
+
+.service-item-left{
+  color: #fff;
+  padding: 30px;
+}
+
+.service-item-right{
+  display: block;
+  object-fit: cover;
+}
