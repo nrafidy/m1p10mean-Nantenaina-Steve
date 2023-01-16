@@ -38,4 +38,33 @@ router.get("/me", async function (req, res) {
     
   });
 
+  router.get("/:id", async function (req, res) {
+    
+    const db = dbo.getDb();
+
+    const id = req.params.id;
+    console.log(id);
+    let user = {
+        _id : mongoose.Types.ObjectId(id)
+    }
+    
+    db.collection("User")
+    .find(user)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(500).json("Error fetching records!");
+      } else {
+        
+        if(result.length > 0) {
+            var user = result[0];
+            res.status(200).json(user);
+        }else{
+            res.status(500).json({'message':'user introuvable'})
+        }
+
+      }
+    });
+    
+  });
+
 module.exports = router;
