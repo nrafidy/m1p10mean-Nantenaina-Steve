@@ -38,6 +38,60 @@ router.get("/me", async function (req, res) {
     
   });
 
+  router.get("/validerEmail/:id", async function (req, res) {
+    const db = dbo.getDb();
+    const id = req.params.id;
+    let token = {
+      _id : mongoose.Types.ObjectId(id)
+    }
+
+    db.collection("token")
+    .find(token)
+    .toArray(function (err, result) {
+      if (err) {
+        res.status(500).json("Error fetching records!");
+      } else {
+        
+        if(result.length > 0) {
+            var idu = result[0]['userId'];
+            let user = {
+              _id : mongoose.Types.ObjectId(idu)
+            }
+      
+          db.collection("User")
+          .find(user)
+          .toArray(function (err, result) {
+            if (err) {
+              res.status(500).json("Error fetching records!");
+            } else {
+              
+              if(result.length > 0) {
+                  // var user = result[0];
+                  // user['validationEmail'] = '1';
+                  console.log(result[0]);
+                  let myquery = result[0];
+                  let newvalues = {$set: {validationEmail : '1'}};
+                  db.collection("User").updateOne(myquery, newvalues, function(err, res) {
+                    if (err) throw err;
+                    console.log("email user valider");
+                    // db.close();
+                  });
+                  res.status(200);
+              }else{
+                  res.status(500).json({'message':'user introuvable'})
+              }
+      
+            }
+          });
+            res.status(200).json(user);
+        }else{
+            res.status(500).json({'message':'user introuvable'})
+        }
+
+      }
+    });
+  })
+
   router.get("/:id", async function (req, res) {
     
     const db = dbo.getDb();
@@ -47,7 +101,7 @@ router.get("/me", async function (req, res) {
     let user = {
         _id : mongoose.Types.ObjectId(id)
     }
-    
+
     db.collection("User")
     .find(user)
     .toArray(function (err, result) {
@@ -57,7 +111,7 @@ router.get("/me", async function (req, res) {
         
         if(result.length > 0) {
             var user = result[0];
-            res.status(200).json(user);
+            res.status(200).json('email user valider');
         }else{
             res.status(500).json({'message':'user introuvable'})
         }
@@ -66,5 +120,7 @@ router.get("/me", async function (req, res) {
     });
     
   });
+
+  
 
 module.exports = router;
