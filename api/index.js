@@ -2,8 +2,9 @@ const express = require("express");
 const dbo = require("./db/connect");
 
 const authRoute = require("./routes/auth");
-
 const userRoute = require("./routes/users");
+const depositRoute = require("./routes/deposit");
+const carRoute = require("./routes/car");
 
 
 const fs = require("fs");
@@ -20,6 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/deposit", depositRoute);
+app.use("/api/car", carRoute);
 
 dbo.connectToServer(function (err) {
   if (err) {

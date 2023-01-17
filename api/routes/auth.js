@@ -43,7 +43,8 @@ router.post("/inscription", function (req, res)  {
       email : req.body.email,
       password : req.body.password,
       type: 'client',
-      validationEmail : '0'
+      validationEmail : '0',
+      car:[]
   }
 
   dbConnect.collection("User")                                                      //check doublon d'emails
@@ -59,7 +60,6 @@ router.post("/inscription", function (req, res)  {
     });
 
     
-
   dbConnect.collection("User").insertOne(user, function (err, result) {                   //create user
       if (err) {
         res.status(500).json("Error inserting matches!");
@@ -114,9 +114,6 @@ router.post("/inscription", function (req, res)  {
               });
           }
           });
-
-        
-        // res.status(200).json(result);
       }
     });
 });
@@ -146,11 +143,6 @@ router.post("/login", function (req, res)  {
           user : result[0],
           datePeremption : date
       }
-      // var resu = generateToken(token,dbConnect,res);
-      // // console.log( generateToken(token,dbConnect,res));
-      // console.log(resu);
-      // // res.status(resu['status']).json(resu['value'])
-      // res.status(200)
       dbConnect.collection("token").insertOne(token, function (err, result1) {
 
       if (err) {

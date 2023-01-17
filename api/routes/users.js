@@ -2,7 +2,7 @@ const router = require("express").Router();
 const dbo = require("../db/connect");
 
 var mongoose = require('mongoose');
-var id = mongoose.Types.ObjectId('4edd40c86762e0fb12000003');
+// var id = mongoose.Types.ObjectId('4edd40c86762e0fb12000003');
 
 router.get("/me", async function (req, res) {
     const db = dbo.getDb();
@@ -53,6 +53,7 @@ router.get("/me", async function (req, res) {
       } else {
         
         if(result.length > 0) {
+          console.log(result)
             var idu = result[0]['userId'];
             let user = {
               _id : mongoose.Types.ObjectId(idu)
@@ -71,21 +72,21 @@ router.get("/me", async function (req, res) {
                   console.log(result[0]);
                   let myquery = result[0];
                   let newvalues = {$set: {validationEmail : '1'}};
-                  db.collection("User").updateOne(myquery, newvalues, function(err, res) {
+                  db.collection("User").updateOne(myquery, newvalues, function(err, res1) {
                     if (err) throw err;
                     console.log("email user valider");
                     // db.close();
                   });
-                  res.status(200);
+                  res.status(200).json(user);
               }else{
                   res.status(500).json({'message':'user introuvable'})
               }
       
             }
           });
-            res.status(200).json(user);
+            // res.status(200).json(user);
         }else{
-            res.status(500).json({'message':'user introuvable'})
+            res.status(500).json({'message':'token introuvable'})
         }
 
       }
