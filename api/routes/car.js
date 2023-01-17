@@ -6,20 +6,18 @@ const { check, validationResult } = require('express-validator');
 
 const verifyToken = async (token, db) => {                                                                    
     const tokenDoc = await db.collection("token").findOne({_id : mongoose.Types.ObjectId(token)});
-    console.log(mongoose.Types.ObjectId(token));
-    console.log(tokenDoc);
     if (!tokenDoc) {
         return {'message': 'Invalid token'};
     }
     if(tokenDoc.datePeremption < Date.now()){
         return {'message': 'Token expired'};
     }
-    return;
+    return tokenDoc;
   }
 
 
 router.post("/create", [
-  check('idUser').isMongoId(),
+//   check('idUser').isMongoId(),
   check('matricule').isString(),
   check('marque').isString(),
   check('model').isString(),
@@ -33,7 +31,7 @@ router.post("/create", [
 
     try {
         const db = await dbo.getDb();
-        var idu = req.body.idUser;
+        // var idu = req.body.idUser;
         var matricule = req.body.matricule;
         var marque = req.body.marque;
         var model = req.body.model;
@@ -41,17 +39,12 @@ router.post("/create", [
 
         const token = req.body.access_token;
         const verification = await verifyToken(token, db);
-        if(verification){
-            return res.status(401).json(verification);
-        }
-        // const tokenDoc = await db.collection("token").findOne({_id : mongoose.Types.ObjectId(token)});
-        // if (!tokenDoc) {
-        //     return res.status(401).json({'message': 'Invalid token'});
+        // console.log(verification);
+        // if(verification){
+        //     return res.status(401).json(verification);
         // }
-        // if(tokenDoc.datePeremption < Date.now()){
-        //     return res.status(401).json({'message': 'Token expired'});
-        // }
-
+        // console.log(verification['userId']);
+        var idu = verification['userId']
 
         var car = {
             matricule: matricule,
@@ -65,7 +58,7 @@ router.post("/create", [
         let newCar = {$push: {car : car}};
     
         const result = await db.collection("User").updateOne(user, newCar);
-        console.log(result);
+        
         if (result.modifiedCount === 1) {
             return res.status(200).json({'message':'car insered'})
         } else {
@@ -76,7 +69,6 @@ router.post("/create", [
         return res.status(500).json({'message':'error2 while adding the car'})
     }
 });
-
 
 
 module.exports = router;
