@@ -1,12 +1,14 @@
 const { MongoClient } = require("mongodb");
 
-const fs = require("fs");
-const path = require("path");
-const env = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../../config.json"), "utf8")
-);
+// const fs = require("fs");
+// const path = require("path");
+// const env = JSON.parse(
+//   fs.readFileSync(path.join(__dirname, "../../config.json"), "utf8")
+// );
 
-const connectionString = env.ATLAS_URI;
+require("dotenv").config();
+
+const connectionString = process.env.ATLAS_URI;
 
 const client = new MongoClient(connectionString, {
   useNewUrlParser: true,
