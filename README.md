@@ -9,10 +9,12 @@ Creer fichier config.json a la racine du projet:
 # Pour lancer front:
 
 ng serve
+live: https://m1p10mean-nantenaina-steve.netlify.app/
 
 # Pour lancer serveur:
 
 npm run server
+live: https://m1p10mean-nantenaina-steve.onrender.com/
 
 # Suivi Taches
 
