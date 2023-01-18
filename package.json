@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build -c=development",
+    "build": "ng build -c=development && node api/index.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "server": "nodemon api/index.js",
@@ -28,6 +28,7 @@
     "@ng-bootstrap/ng-bootstrap": "^14.0.1",
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.3",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-validator": "^6.14.2",
     "imagekit": "^4.1.2",

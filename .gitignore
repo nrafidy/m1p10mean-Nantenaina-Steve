@@ -43,6 +43,8 @@ Thumbs.db
 
 /config.json
 
+.env
+
 src/assets/logo/Allerta_stencil.zip
 src/assets/logo/logo_dark.ai
 src/assets/logo/logo.ai
