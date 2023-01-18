@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "server": "nodemon api/index.js"
+    "server": "nodemon api/index.js",
+    "build:prod": "ng build -c=production"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +30,8 @@
     "bootstrap": "^5.2.3",
     "express": "^4.18.2",
     "express-validator": "^6.14.2",
+    "imagekit": "^4.1.2",
+    "imagekitio-angular": "^1.0.2",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.3",
     "nodejs-nodemailer-outlook": "^1.2.4",
