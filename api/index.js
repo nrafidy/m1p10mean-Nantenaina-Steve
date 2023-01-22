@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const dbo = require("./db/connect");
 require("dotenv").config();
 
@@ -9,15 +10,14 @@ const carRoute = require("./routes/car");
 const imageKitRoute = require("./routes/imagekit");
 const repairRoute = require("./routes/reparation");
 
-// const fs = require("fs");
-// const path = require("path");
-// const env = JSON.parse(
-//   fs.readFileSync(path.join(__dirname, "../config.json"), "utf8")
-// );
-
 const app = express();
 
 //middleware
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
