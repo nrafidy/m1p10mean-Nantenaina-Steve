@@ -6,7 +6,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { NgbModule, NgbDatepickerModule, NgbCollapseModule  } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDatepickerModule, NgbCollapseModule, NgbAccordionModule, NgbProgressbarModule  } from '@ng-bootstrap/ng-bootstrap';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
 
 import { NavbarComponent } from './navbar/navbar.component';
 import { HeroBannerComponent } from './hero-banner/hero-banner.component';
@@ -19,6 +21,21 @@ import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { APP_CONFIG, APP_SERVICE_CONFIG } from './appconfig/appconfig.service';
+import { AdminComponent } from './admin/admin.component';
+import { AdminNavComponent } from './admin-nav/admin-nav.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { AdminVoituresComponent } from './admin-voitures/admin-voitures.component';
+import { AdminTopnavComponent } from './admin-topnav/admin-topnav.component';
+import { ImagekitioAngularModule } from 'imagekitio-angular';
+import { environment } from 'src/environments/environment.development';
+import { AdminRepairComponent } from './admin-repair/admin-repair.component';
+import { SortableTableComponent } from './sortable-table/sortable-table.component';
+import { PaymentStatePipe } from './custom-pipes/payment-state.pipe';
+import { AriaryPipe } from './custom-pipes/ariary.pipe';
+import { RepairStatePipe } from './custom-pipes/repair-state.pipe copy';
+import { AdminFactureComponent } from './admin-facture/admin-facture.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { AdminHistoryComponent } from './admin-history/admin-history.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +47,20 @@ import { APP_CONFIG, APP_SERVICE_CONFIG } from './appconfig/appconfig.service';
     TestimonialsComponent,
     ContactUsComponent,
     FooterComponent,
-    LoginComponent
+    LoginComponent,
+    AdminComponent,
+    AdminNavComponent,
+    NotFoundComponent,
+    AdminVoituresComponent,
+    AdminTopnavComponent,
+    AdminRepairComponent,
+    SortableTableComponent,
+    PaymentStatePipe,
+    AriaryPipe,
+    RepairStatePipe,
+    AdminFactureComponent,
+    AdminDashboardComponent,
+    AdminHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -39,10 +69,19 @@ import { APP_CONFIG, APP_SERVICE_CONFIG } from './appconfig/appconfig.service';
     FontAwesomeModule,
     NgbDatepickerModule,
     NgbCollapseModule,
+    NgbAccordionModule,
+    NgbProgressbarModule,
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTableModule,
+    MatSortModule,
+    ImagekitioAngularModule.forRoot({
+      publicKey: environment.imageKitIoKey,
+      urlEndpoint: environment.imageKitIoUrl,
+      authenticationEndpoint: environment.authenticationEndpoint
+    })
   ],
   providers: [
     {

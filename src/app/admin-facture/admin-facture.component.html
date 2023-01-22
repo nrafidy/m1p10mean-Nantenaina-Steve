@@ -1,0 +1,100 @@
+<div class="container-fluid">
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Vous cherchez une facture particulière ?"
+      aria-label="search-bill"
+      aria-describedby="search-bill"
+    />
+    <div class="input-group-append ms-3">
+      <span class="input-group-text" id="search-bill">Rechercher</span>
+    </div>
+  </div>
+  <div class="content mt-3">
+    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+      <ngb-panel *ngFor="let car of cars">
+        <ng-template ngbPanelTitle>
+          <div class="d-inline-flex">
+            <h5 class="accordion-title">BMW e30</h5>
+            <button class="btn btn-primary ms-3">Récupérer</button>
+            <button class="btn btn-primary ms-3">Receptionner</button>
+            <button class="btn btn-primary ms-3">Sortie</button>
+          </div>
+        </ng-template>
+        <ng-template ngbPanelContent class="d-flex">
+          <div class="row">
+            <div class="panel-left col-2">
+              <img
+                src="../../assets/img/e30.jpg"
+                alt="card-pic"
+                class="card-img-top"
+              />
+              <hr class="m-0 mt-3" />
+              <small class="card-title">Avancements</small>
+              <p class="mt-2 mb-0">
+                <ngb-progressbar
+                  type="danger"
+                  [value]="75"
+                  [max]="100"
+                  [striped]="true"
+                  [animated]="true"
+                  height="10px"
+                ></ngb-progressbar>
+              </p>
+              <p class="mt-2 mb-0">
+                <ngb-progressbar
+                  type="warning"
+                  [value]="75"
+                  [max]="100"
+                  [striped]="true"
+                  [animated]="true"
+                  height="10px"
+                ></ngb-progressbar>
+              </p>
+              <p class="mt-2 mb-0">
+                <ngb-progressbar
+                  type="info"
+                  [value]="75"
+                  [max]="100"
+                  [striped]="true"
+                  [animated]="true"
+                  height="10px"
+                ></ngb-progressbar>
+              </p>
+              <button class="btn btn-outline-secondary mt-3">
+                Valider paiements
+              </button>
+            </div>
+            <div class="panel-right col">
+              <table matSort class="table table-striped">
+                <thead>
+                  <tr>
+                    <th mat-sort-header="name">Description</th>
+                    <th mat-sort-header="state">Avancement</th>
+                    <th mat-sort-header="amount">Montant</th>
+                    <th mat-sort-header="payment">Etat</th>
+                    <th mat-sort-header="action">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let repair of car.deposits[0].repairs">
+                    <td>{{ repair.name }}</td>
+                    <td>{{ repair.state | repairState }}</td>
+                    <td>{{ repair.amount | ariary }}</td>
+                    <td>{{ repair.payment | paymentState }}</td>
+                    <td>
+                      <button class="btn btn-outline-secondary">
+                        Valider paiement
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </div>
+</div>

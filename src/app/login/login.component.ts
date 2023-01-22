@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from '../services/user/user.service';
 import { APP_SERVICE_CONFIG } from '../appconfig/appconfig.service';
 import { Appconfig } from '../interfaces/appconfig.interface';
+import { User } from '../models/User.model';
+import { take } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,34 +15,38 @@ import { Appconfig } from '../interfaces/appconfig.interface';
 })
 export class LoginComponent {
   pageShown = 'login';
-  firstname = '';
-  lastname = '';
-  email = '';
-  password = '';
+  user: User = {
+    ID: '',
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    type: '',
+    validationEmail: false,
+    access_token: ''
+  }
 
 	constructor(
-    @Inject(APP_SERVICE_CONFIG) private config: Appconfig,
     private modalService: NgbModal,
-    private httpClient: HttpClient,
-    private userService: UserService) {}
+    private userService: UserService,
+    private router: Router) {}
 
 	open(content: any) {
 		this.modalService.open(content, { ariaLabelledBy: 'modal-login-title', centered: true });
 	}
 
   loginSubmit(){
-  //   const data = new FormData();
-  //   data.append('email', this.email);
-  //   data.append('password', this.password);
-
-    // this.httpClient.post<any>(AppSettings.API_AUTH_ENDPOINT, data).subscribe(
-    //   (res) => console.log(res),
-    //   (err) => console.log(err)
-    // );
-    // console.log(data);
-    // console.log(this.config.apiEndpoint);
-
+    // this.userService.login(this.user).pipe(take(1)).subscribe(data => {
+    //   console.log(data);
+      this.modalService.dismissAll();
+      this.router.navigate(['/admin']);
+    // });
   }
 
-  signupSubmit(){}
+  signupSubmit(){
+    this.userService.signup(this.user).pipe(take(1)).subscribe(data => {
+      console.log(data);
+      this.pageShown = 'signup-success';
+    });
+  }
 }

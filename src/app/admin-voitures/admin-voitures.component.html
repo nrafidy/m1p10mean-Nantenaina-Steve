@@ -1,0 +1,47 @@
+<div class="container-fluid p-0 px-5 mt-3">
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Vous cherchez une voiture particulière ?" aria-label="search-car" aria-describedby="search-car">
+    <div class="input-group-append ms-3">
+      <span class="input-group-text" id="search-car">Rechercher</span>
+    </div>
+  </div>
+  <div class="content">
+    <div class="row d-flex flex-wrap">
+      <div class="card-container mt-3">
+        <div class="card">
+          <div class="card-header d-inline-flex justify-content-between">
+            <div class="header-left d-inline-flex">
+              <div class="repair mx-2">
+                <fa-icon [icon]="faRep" class="badge rounded-pill text-bg-danger p-2 card-icon" size="lg" [ngbTooltip]="rep"></fa-icon>
+                <ng-template #rep>Pour réparations</ng-template>
+              </div>
+              <div class="maintenance me-2">
+                <fa-icon [icon]="faEnt" class="badge rounded-pill text-bg-warning p-2 card-icon" size="lg" [ngbTooltip]="ent"></fa-icon>
+                <ng-template #ent>Pour entretien</ng-template>
+              </div>
+              <div class="diag me-2">
+                <fa-icon [icon]="faDiag" class="badge rounded-pill text-bg-info p-2 card-icon" size="lg" [ngbTooltip]="diag"></fa-icon>
+                <ng-template #diag>Pour diagnostique</ng-template>
+              </div>
+            </div>
+            <div class="header-right">
+              <span class="card-title">BMW e30</span>
+            </div>
+          </div>
+          <div class="card-body"  (click)="openRepair('ID')">
+            <img src="../../assets/img/e30.jpg" alt="card-pic" class="card-img-top">
+            <hr class="m-0 mt-3">
+            <small class="card-title">Avancements</small>
+            <p class="mt-1 mb-0"><ngb-progressbar type="danger" [value]="75" [max]="100" [striped]="true" [animated]="true" height="5px"></ngb-progressbar></p>
+            <p class="mt-1 mb-0"><ngb-progressbar type="warning" [value]="75" [max]="100" [striped]="true" [animated]="true" height="5px"></ngb-progressbar></p>
+            <p class="mt-1 mb-0"><ngb-progressbar type="info" [value]="75" [max]="100" [striped]="true" [animated]="true" height="5px"></ngb-progressbar></p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-outline-secondary">Récupérer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

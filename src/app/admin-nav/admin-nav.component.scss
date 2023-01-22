@@ -1,0 +1,29 @@
+.sidebar{
+  min-height: 100vh;
+  height: 100%;
+  position: relative;
+
+  .toggle{
+    width: 100%;
+    position: relative;
+    // left: 30px;
+
+    .sidebar-icon{
+      color: #fff;
+    }
+  }
+
+  .nav-title{
+    font-size: small;
+  }
+
+  .nav-title:hover{
+    font-weight: bold;
+  }
+
+  .nav-item:hover{
+    background-color: rgba($color: #000000, $alpha: 0.1);
+    cursor: pointer;
+  }
+}
+

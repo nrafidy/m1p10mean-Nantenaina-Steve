@@ -1,0 +1,160 @@
+<div class="container-fluid overflow-auto" style="height: 100vh">
+  <div class="offcanvas-header">
+    <div class="d-inline-flex">
+      <h5 class="offcanvas-title">BMW e30</h5>
+      <button class="btn btn-primary ms-3">Récupérer</button>
+      <button class="btn btn-primary ms-3">Receptionner</button>
+      <button class="btn btn-primary ms-3">Sortie</button>
+      <button class="btn btn-outline-secondary ms-3">Factures</button>
+    </div>
+    <button
+      type="button"
+      class="btn-close text-reset"
+      aria-label="Close"
+      (click)="activeOffcanvas.dismiss('Cross click')"
+      ngbAutofocus
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <img src="../../assets/img/e30.jpg" alt="card-pic" class="card-img-top" />
+    <div class="my-3">
+      <ngb-accordion #acc="ngbAccordion">
+        <ngb-panel>
+          <ng-template ngbPanelTitle>
+            <div>
+              <span class="offcanvas-title">Réparations</span>
+              <span class="badge text-bg-danger ms-1">{{
+                sortedRepairs.length
+              }}</span>
+            </div>
+          </ng-template>
+          <ng-template ngbPanelContent *ngIf="sortedRepairs.length > 0">
+            <p class="mt-1 mb-0">
+              <ngb-progressbar
+                type="danger"
+                [value]="75"
+                [max]="100"
+                [striped]="true"
+                [animated]="true"
+                height="15px"
+              ></ngb-progressbar>
+            </p>
+            <table
+              matSort
+              (matSortChange)="sortRep($event)"
+              class="table table-striped"
+            >
+              <thead>
+                <tr>
+                  <th mat-sort-header="name">Description</th>
+                  <th mat-sort-header="state">Avancement</th>
+                  <th mat-sort-header="amount">Montant</th>
+                  <th mat-sort-header="payment">Etat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let repair of sortedRepairs">
+                  <td>{{ repair.name }}</td>
+                  <td>{{ repair.state | repairState }}</td>
+                  <td>{{ repair.amount | ariary }}</td>
+                  <td>{{ repair.payment | paymentState }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+        </ngb-panel>
+        <ngb-panel>
+          <ng-template ngbPanelTitle>
+            <div>
+              <span class="offcanvas-title">Entretiens</span>
+              <span class="badge text-bg-warning ms-1">{{
+                sortedMaintenances.length
+              }}</span>
+            </div>
+          </ng-template>
+          <ng-template ngbPanelContent *ngIf="sortedMaintenances.length > 0">
+            <p class="mt-1 mb-0">
+              <ngb-progressbar
+                type="warning"
+                [value]="75"
+                [max]="100"
+                [striped]="true"
+                [animated]="true"
+                height="15px"
+              ></ngb-progressbar>
+            </p>
+            <table
+              matSort
+              (matSortChange)="sortMain($event)"
+              class="table table-striped"
+            >
+              <thead>
+                <tr>
+                  <th mat-sort-header="name">Description</th>
+                  <th mat-sort-header="state">Avancement</th>
+                  <th mat-sort-header="amount">Montant</th>
+                  <th mat-sort-header="payment">Etat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let repair of sortedMaintenances">
+                  <td>{{ repair.name }}</td>
+                  <td>{{ repair.state | repairState }}</td>
+                  <td>{{ repair.amount | ariary }}</td>
+                  <td>{{ repair.payment | paymentState }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+        </ngb-panel>
+        <ngb-panel>
+          <ng-template ngbPanelTitle>
+            <div>
+              <span class="offcanvas-title">Diagnostiques</span>
+              <span class="badge text-bg-info ms-1">{{
+                sortedDiags.length
+              }}</span>
+            </div>
+          </ng-template>
+          <ng-template ngbPanelContent *ngIf="sortedDiags.length > 0">
+            <p class="mt-1 mb-0">
+              <ngb-progressbar
+                type="info"
+                [value]="75"
+                [max]="100"
+                [striped]="true"
+                [animated]="true"
+                height="15px"
+              ></ngb-progressbar>
+            </p>
+            <table
+              matSort
+              (matSortChange)="sortDiag($event)"
+              class="table table-striped"
+            >
+              <thead>
+                <tr>
+                  <th mat-sort-header="name">Description</th>
+                  <th mat-sort-header="state">Avancement</th>
+                  <th mat-sort-header="amount">Montant</th>
+                  <th mat-sort-header="payment">Etat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let repair of sortedDiags">
+                  <td>{{ repair.name }}</td>
+                  <td>{{ repair.state | repairState }}</td>
+                  <td>{{ repair.amount | ariary }}</td>
+                  <td>{{ repair.payment | paymentState }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+    </div>
+  </div>
+  <div class="offcanvas-footer p-3">
+    <button class="btn btn-secondary">Ajouter travaux</button>
+  </div>
+</div>

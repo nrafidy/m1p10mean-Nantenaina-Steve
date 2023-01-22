@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "http://localhost:1234",
+    "target": "https://m1p10mean-nantenaina-steve.onrender.com/",
     "secure": false
   }
 }
