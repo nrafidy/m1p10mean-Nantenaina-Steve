@@ -4,9 +4,10 @@ require("dotenv").config();
 
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
-// const depositRoute = require("./routes/deposit");
+const depositRoute = require("./routes/deposit");
 const carRoute = require("./routes/car");
 const imageKitRoute = require("./routes/imagekit");
+const repairRoute = require("./routes/reparation");
 
 // const fs = require("fs");
 // const path = require("path");
@@ -23,8 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoute);
 app.use("/api/imagekit", imageKitRoute);
 app.use("/api/user", userRoute);
-// app.use("/api/deposit", depositRoute);
+app.use("/api/deposit", depositRoute);
 app.use("/api/car", carRoute);
+app.use("/api/repair", repairRoute);
 
 dbo.connectToServer(function (err) {
   if (err) {
