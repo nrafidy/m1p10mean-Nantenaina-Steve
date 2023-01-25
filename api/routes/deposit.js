@@ -85,7 +85,7 @@ router.post("/create/:matricule", [
       }
   });
 
-router.get("/:matricule", function (req, res) {
+router.get("/:matricule", async function (req, res) {
 
 const db = dbo.getDb();
 var matricule = req.params.matricule;

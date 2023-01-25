@@ -155,7 +155,7 @@ router.delete("/delete/:matricule", [
         }
     });
 
-    router.get("/:matricule", [
+router.get("/:matricule", [
   check('access_token').isString()
 ], async (req, res) => {
     const errors = validationResult(req);

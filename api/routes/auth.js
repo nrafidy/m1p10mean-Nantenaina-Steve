@@ -17,7 +17,7 @@ router.get("/test-db", async function (req, res) {
     });
 });
 
-router.post("/test-db/create", function (req, res) {
+router.post("/test-db/create",async function (req, res) {
   const dbConnect = dbo.getDb();
 
   const data = {
@@ -33,7 +33,7 @@ router.post("/test-db/create", function (req, res) {
   });
 });
 
-router.post("/inscription", function (req, res)  {
+router.post("/inscription", async function (req, res)  {
   const dbConnect = dbo.getDb();
   
   // console.log(fullUrl);
@@ -118,7 +118,7 @@ router.post("/inscription", function (req, res)  {
     });
 });
 
-router.post("/login", function (req, res)  {
+router.post("/login", async function (req, res)  {
   const dbConnect = dbo.getDb();
   let user = {
       email : req.body.email,
