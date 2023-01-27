@@ -10,16 +10,15 @@ const verifyToken = async (token, db) => {
     if (!tokenDoc) {
         return {'message': 'Invalid token'};
     }
-    console.log(tokenDoc);
-    var userid = tokenDoc.userId;
-    var user = await db.collection('User').findOne({_id : mongoose.Types.ObjectId(userid)});
-    // console.log(user);
-    if(user.type != 'res_atelier') {
-        return {'message': 'vous n\'etes pas autorise a acceder a cette fonctionalité'};
-    }
     if(tokenDoc.datePeremption < Date.now()){
         return {'message': 'Token expired'};
     }
+    var userid = tokenDoc.user[0]._id;
+    var user = await db.collection('User').findOne({_id : mongoose.Types.ObjectId(userid)});
+    // console.log(user);
+    // if(user.type != 'res_atelier') {
+    //     return {'message': 'vous n\'etes pas autorise a acceder a cette fonctionalité'};
+    // }
     return tokenDoc;
   }
 
@@ -38,12 +37,12 @@ router.post("/create", [
           const db = await dbo.getDb();
           const token = req.body.access_token;
           const verification = await verifyToken(token, db);
-            if(verification){
+            if(verification['message']){
                 return res.status(401).json(verification);
             }
         var depositId = req.body.depositId;
         var reparationId = new mongoose.Types.ObjectId();
-          let reparation = {
+          var reparation = {
               _id: reparationId,
               State: "todo",
               type: "reparation",
@@ -51,10 +50,10 @@ router.post("/create", [
               montant: req.body.montant,
               paiement :"pending"
           };
-        //   let query = { "car.deposit._id": mongoose.Types.ObjectId(depositId) };
-          let query = { "car.deposit._id": depositId };
+        //   var query = { "car.deposit._id": mongoose.Types.ObjectId(depositId) };
+          var query = { "car.deposit._id": depositId };
           
-          let update = { $push: { "car.$.deposit.$[deposit].reparation": reparation } };
+          var update = { $push: { "car.$.deposit.$[deposit].reparation": reparation } };
           const arrayFilters = [{ "deposit._id": mongoose.Types.ObjectId(depositId) }];
 
           await db.collection("User").updateOne(query, update,{ arrayFilters: arrayFilters }, function(err, result) {

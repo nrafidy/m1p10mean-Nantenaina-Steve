@@ -59,15 +59,12 @@ router.post("/inscription", async function (req, res) {
     }
 
     const insertUserID = await dbConnect.collection("User").insertOne(user);
-
+    const insertedUser = await dbConnect.collection("User").findOne({_id: insertUserID.insertedId});
     //generer token pour inscription
     let date = new Date();
     date.setDate(date.getDate() + 1);
     const token = {
-      user: {
-        _id: insertUserID.insertedId,
-        ...user,
-      },
+      user: insertedUser,
       datePeremption: date,
     };
     const insertToken = await dbConnect.collection("token").insertOne(token);
@@ -130,8 +127,10 @@ router.post("/login", async function (req, res) {
     const insertToken = await dbConnect.collection("token").insertOne(token);
     token._id = insertToken.insertedId;
     res.status(200).json(token);
+    return;
   } catch (error) {
     res.status(500).json(error);
+    return;
   }
 });
 

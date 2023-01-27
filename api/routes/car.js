@@ -52,15 +52,14 @@ router.post("/create", [
         const verification = await verifyToken(token, db);
         const verificationCar = await verifyCar(matricule,db);
         // console.log(verification);
-        // if(verification){
-        //     return res.status(401).json(verification);
-        // }
-        // console.log(verification['userId']);
+        if(verification['message']){
+            return res.status(401).json(verification);
+        }
         if(verificationCar){
             return res.status(401).json('Car already insered');
         }
-        // console.log(verification['userId']);
-        var idu = verification['userId']
+        // console.log(verification['user'][0]._id);
+        var idu = verification['user'][0]._id.toString();
 
         var car = {
             matricule: matricule,
@@ -70,10 +69,10 @@ router.post("/create", [
             deposit: [],
         }
 
-        let user = {_id : mongoose.Types.ObjectId(idu)};
-        let newCar = {$push: {car : car}};
+        var user = {_id : mongoose.Types.ObjectId(idu)};
+        var newCar = {$push: {car : car}};
     
-        const result = await db.collection("User").updateOne(user, newCar);
+        var result = await db.collection("User").updateOne(user, newCar);
         
         if (result.modifiedCount === 1) {
             return res.status(200).json({'message':'car insered'})
