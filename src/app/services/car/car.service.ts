@@ -1,14 +1,37 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { APP_SERVICE_CONFIG } from 'src/app/appconfig/appconfig.service';
+import { Appconfig } from 'src/app/interfaces/appconfig.interface';
 import { Car } from 'src/app/models/Car.model';
+import { User } from 'src/app/models/User.model';
 import { DepositService } from '../deposit/deposit.service';
 import { RepairService } from '../repair/repair.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarService {
+  private carUrl: string;
 
-  constructor() { }
+  constructor(
+    @Inject(APP_SERVICE_CONFIG) private config: Appconfig,
+    private http: HttpClient,
+  ) {
+    this.carUrl = config.apiEndpoint.concat("api/car/");
+  }
+
+  addCar(car: Car){
+    const access_token = JSON.parse(localStorage.getItem('user_token') as string);
+    const data = {
+      matricule: car.vin.replace(/\s/g,'').toUpperCase(),
+      marque: car.make.toUpperCase(),
+      model: car.model.toUpperCase(),
+      image: '',
+      access_token: access_token._id
+    }
+    return this.http.post<Car>(this.carUrl.concat('create'), data);
+  }
 
   getCars(): Car[]{
     return [
@@ -22,7 +45,7 @@ export class CarService {
             state:'received',
             createdAt: Date.now(),
             updatedAt: Date.now(),
-            repairs: new DepositService().getRepairs()
+            repairs: DepositService.getRepairs()
           },
           {
             ID:'1',
@@ -30,21 +53,11 @@ export class CarService {
             state:'received',
             createdAt: Date.now(),
             updatedAt: Date.now(),
-            repairs: new DepositService().getRepairs()
+            repairs: DepositService.getRepairs()
           },
         ],
         make:'BMW',
         model:'e30',
-        user:{
-          ID:'1',
-          access_token:'asdfadsf',
-          email:'test@test',
-          firstname:'John',
-          lastname:'Doe',
-          password:'asfdasdf',
-          type:'client',
-          validationEmail: true
-        },
         vin:'123456789'
       },
       {
@@ -56,20 +69,10 @@ export class CarService {
           state:'received',
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          repairs: new DepositService().getRepairs()
+          repairs: DepositService.getRepairs()
         }],
         make:'BMW',
         model:'e30',
-        user:{
-          ID:'1',
-          access_token:'asdfadsf',
-          email:'test@test',
-          firstname:'John',
-          lastname:'Doe',
-          password:'asfdasdf',
-          type:'client',
-          validationEmail: true
-        },
         vin:'123456789'
       },
       {
@@ -81,20 +84,10 @@ export class CarService {
           state:'received',
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          repairs: new DepositService().getRepairs()
+          repairs: DepositService.getRepairs()
         }],
         make:'BMW',
         model:'e30',
-        user:{
-          ID:'1',
-          access_token:'asdfadsf',
-          email:'test@test',
-          firstname:'John',
-          lastname:'Doe',
-          password:'asfdasdf',
-          type:'client',
-          validationEmail: true
-        },
         vin:'123456789'
       },
       {
@@ -106,20 +99,10 @@ export class CarService {
           state:'received',
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          repairs: new DepositService().getRepairs()
+          repairs: DepositService.getRepairs()
         }],
         make:'BMW',
         model:'e30',
-        user:{
-          ID:'1',
-          access_token:'asdfadsf',
-          email:'test@test',
-          firstname:'John',
-          lastname:'Doe',
-          password:'asfdasdf',
-          type:'client',
-          validationEmail: true
-        },
         vin:'123456789'
       }
     ];

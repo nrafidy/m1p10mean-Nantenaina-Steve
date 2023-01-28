@@ -3,15 +3,58 @@
     <div class="d-inline-flex">
       <div class="header">
         <h1 class="sidebar-title">
-          Bienvenue Test
+          Bienvenue {{ currentUser.firstname }}
         </h1>
       </div>
     </div>
     <div>
-      <!-- <div class="btn btn-outline-secondary">
-        <fa-icon [icon]="faUser" class="badge rounded-pill text-bg-secondary" size="lg"></fa-icon>
-      </div> -->
-      <div class="btn btn-secondary">Ajouter une voiture</div>
+      <div class="btn btn-secondary" (click)="open(content)">Déposer une voiture</div>
     </div>
   </div>
 </div>
+
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Déposer une nouvelle voiture</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<form #newCar="ngForm" (ngSubmit)="submitCar()">
+      <div class="form-group mt-3">
+        <label for="make">Marque</label>
+        <input #makeField="ngModel" type="text" class="form-control" id="make" aria-describedby="make" placeholder="Tapez la marque de votre voiture" required
+          [(ngModel)]="addCar.make" name="make"/>
+        <div *ngIf="!makeField.valid && makeField.touched">
+          <small *ngIf="makeField.errors?.['required']">La marque est requise.</small>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <label for="model">Modèle</label>
+        <input #modelField="ngModel" type="text" class="form-control" id="model" aria-describedby="model" placeholder="Tapez le modèle de votre voiture" required
+          [(ngModel)]="addCar.model" name="model"/>
+        <div *ngIf="!modelField.valid && modelField.touched">
+          <small *ngIf="modelField.errors?.['required']">Le modèle est requis.</small>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <label for="vin">Numéro</label>
+        <input #vinField="ngModel" type="text" class="form-control" id="vin" aria-describedby="vin" placeholder="Tapez le numéro de votre voiture" required
+          [(ngModel)]="addCar.vin" name="vin"/>
+        <div *ngIf="!vinField.valid && vinField.touched">
+          <small *ngIf="vinField.errors?.['required']">Le numéro est requis.</small>
+        </div>
+      </div>
+      <button
+          type="submit"
+          class="btn btn-secondary mt-3"
+          [disabled]="!newCar.form.valid"
+        >
+          Déposer
+      </button>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close()">Save</button>
+	</div>
+</ng-template>
+

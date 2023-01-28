@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { faAnglesLeft, faAnglesRight, faCar, faFolder, faHouseChimney, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
+import { faAnglesLeft, faAnglesRight, faCar, faDoorOpen, faFolder, faHouseChimney, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-admin-nav',
@@ -14,6 +15,14 @@ export class AdminNavComponent {
   faHistory = faFolder;
   faOpen = faAnglesRight;
   faClose = faAnglesLeft;
+  faLogout = faDoorOpen;
+
+  constructor(private router: Router){}
 
   handleSidebarToggle = () => this.isExpanded = !this.isExpanded;
+
+  logout(){
+    localStorage.removeItem("user_token");
+    this.router.navigateByUrl("/");
+  }
 }

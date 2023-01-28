@@ -59,7 +59,9 @@ router.post("/inscription", async function (req, res) {
     }
 
     const insertUserID = await dbConnect.collection("User").insertOne(user);
-    const insertedUser = await dbConnect.collection("User").findOne({_id: insertUserID.insertedId});
+    const insertedUser = await dbConnect
+      .collection("User")
+      .findOne({ _id: insertUserID.insertedId });
     //generer token pour inscription
     let date = new Date();
     date.setDate(date.getDate() + 1);
@@ -106,22 +108,28 @@ router.post("/inscription", async function (req, res) {
 router.post("/login", async function (req, res) {
   try {
     const dbConnect = dbo.getDb();
-    let user = {
-      email: req.body.email,
-      password: req.body.password,
-    };
 
-    const loggedUser = await dbConnect.collection("User").find(user).toArray();
+    const loggedUser = await dbConnect
+      .collection("User")
+      .find({ email: req.body.email })
+      .toArray();
 
-    if (loggedUser.length > 0 && loggedUser[0].validationEmail === "0") {
-      res.status(400).json({ message: "email not valid" });
-      return;
+    if (loggedUser.length > 0) {
+      if (loggedUser[0].validationEmail === "0") {
+        res.status(400).json({ message: "email" });
+        return;
+      }
+
+      if (loggedUser[0].password !== req.body.password) {
+        res.status(400).json({ message: "password" });
+        return;
+      }
     }
 
     let date = new Date();
     date.setDate(date.getDate() + 5);
     let token = {
-      user: loggedUser,
+      user: loggedUser[0],
       datePeremption: date,
     };
     const insertToken = await dbConnect.collection("token").insertOne(token);

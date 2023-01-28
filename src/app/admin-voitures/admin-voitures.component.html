@@ -7,9 +7,9 @@
   </div>
   <div class="content">
     <div class="row d-flex flex-wrap">
-      <div class="card-container mt-3">
+      <div class="card-container mt-3" *ngFor="let car of cars; let i = index" [attr.data-index]="i">
         <div class="card">
-          <div class="card-header d-inline-flex justify-content-between">
+          <div class="card-header d-inline-flex justify-content-between align-items-center">
             <div class="header-left d-inline-flex">
               <div class="repair mx-2">
                 <fa-icon [icon]="faRep" class="badge rounded-pill text-bg-danger p-2 card-icon" size="lg" [ngbTooltip]="rep"></fa-icon>
@@ -24,12 +24,14 @@
                 <ng-template #diag>Pour diagnostique</ng-template>
               </div>
             </div>
-            <div class="header-right">
-              <span class="card-title">BMW e30</span>
+            <div class="header-right d-flex flex-column align-items-end">
+              <span class="card-title m-0">{{ car.make }}</span>
+              <span class="card-title m-0">{{ car.model }}</span>
+              <span class="card-title m-0">{{ car.vin }}</span>
             </div>
           </div>
-          <div class="card-body"  (click)="openRepair('ID')">
-            <img src="../../assets/img/e30.jpg" alt="card-pic" class="card-img-top">
+          <div class="card-body"  (click)="openRepair(car, i)">
+            <img src="../../assets/img/car_placeholder.jpg" alt="card-pic" class="card-img-top">
             <hr class="m-0 mt-3">
             <small class="card-title">Avancements</small>
             <p class="mt-1 mb-0"><ngb-progressbar type="danger" [value]="75" [max]="100" [striped]="true" [animated]="true" height="5px"></ngb-progressbar></p>
@@ -37,7 +39,7 @@
             <p class="mt-1 mb-0"><ngb-progressbar type="info" [value]="75" [max]="100" [striped]="true" [animated]="true" height="5px"></ngb-progressbar></p>
           </div>
           <div class="card-footer">
-            <button class="btn btn-outline-secondary">Récupérer</button>
+            <button class="btn btn-outline-secondary" (click)="collect(car)">Récupérer</button>
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { Car } from "./Car.model";
+
 export class User{
   constructor(
     public ID: string,
@@ -7,6 +9,7 @@ export class User{
     public password: string,
     public type: UserType,
     public validationEmail: boolean,
+    public cars: Car[],
     public access_token: string
   ){}
 }

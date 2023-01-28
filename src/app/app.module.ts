@@ -1,5 +1,7 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '@angular/common';
@@ -36,6 +38,11 @@ import { RepairStatePipe } from './custom-pipes/repair-state.pipe copy';
 import { AdminFactureComponent } from './admin-facture/admin-facture.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AdminHistoryComponent } from './admin-history/admin-history.component';
+import { LoggedInGuard } from './guards/logged-in.guard';
+import { ResAtelierGuard } from './guards/res-atelier.guard';
+import { ResFinanceGuard } from './guards/res-finance.guard';
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -77,6 +84,9 @@ import { AdminHistoryComponent } from './admin-history/admin-history.component';
     HttpClientModule,
     MatTableModule,
     MatSortModule,
+    NgxDropzoneModule,
+    BrowserAnimationsModule,
+    NgxSpinnerModule,
     ImagekitioAngularModule.forRoot({
       publicKey: environment.imageKitIoKey,
       urlEndpoint: environment.imageKitIoUrl,
@@ -86,9 +96,13 @@ import { AdminHistoryComponent } from './admin-history/admin-history.component';
   providers: [
     {
       provide: APP_SERVICE_CONFIG,
-      useValue: APP_CONFIG
-    }
+      useValue: APP_CONFIG,
+    },
+    LoggedInGuard,
+    ResAtelierGuard,
+    ResFinanceGuard
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

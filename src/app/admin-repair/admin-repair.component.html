@@ -1,7 +1,10 @@
 <div class="container-fluid overflow-auto" style="height: 100vh">
   <div class="offcanvas-header">
-    <div class="d-inline-flex">
-      <h5 class="offcanvas-title">BMW e30</h5>
+    <div class="d-inline-flex align-items-center">
+      <div class="d-flex flex-column">
+        <h5 class="offcanvas-title">{{ car.make }} {{ car.model }}</h5>
+        <h5 class="offcanvas-title">{{ car.vin }}</h5>
+      </div>
       <button class="btn btn-primary ms-3">Récupérer</button>
       <button class="btn btn-primary ms-3">Receptionner</button>
       <button class="btn btn-primary ms-3">Sortie</button>
@@ -16,7 +19,7 @@
     ></button>
   </div>
   <div class="offcanvas-body">
-    <img src="../../assets/img/e30.jpg" alt="card-pic" class="card-img-top" />
+    <img src="../../assets/img/car_placeholder.jpg" alt="card-pic" class="card-img-top" />
     <div class="my-3">
       <ngb-accordion #acc="ngbAccordion">
         <ngb-panel>
@@ -155,6 +158,54 @@
     </div>
   </div>
   <div class="offcanvas-footer p-3">
-    <button class="btn btn-secondary">Ajouter travaux</button>
+    <button class="btn btn-secondary"  (click)="open(repair)">Ajouter travaux</button>
   </div>
 </div>
+
+<ng-template #repair let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Ajouter une réparation</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<form #newRepair="ngForm" (ngSubmit)="submitRepair()">
+      <div class="form-group mt-3">
+        <label for="type">Type</label>
+        <select class="form-select" name="type" aria-label="type" #typeField="ngModel" [(ngModel)]="addRepair.type" id="type" placeholder="Type de réparation" required>
+          <option value="repair" selected>Réparation</option>
+          <option value="maintenance">Entretien</option>
+          <option value="diagnostic">Diagnostique</option>
+        </select>
+        <div *ngIf="!typeField.valid && typeField.touched">
+          <small *ngIf="typeField.errors?.['required']">La marque est requise.</small>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <label for="name">Nom</label>
+        <input #nameField="ngModel" type="text" class="form-control" id="name" aria-describedby="name" placeholder="Tapez le nom de cette réparation" required
+          [(ngModel)]="addRepair.name" name="name"/>
+        <div *ngIf="!nameField.valid && nameField.touched">
+          <small *ngIf="nameField.errors?.['required']">Le nom est requis.</small>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <label for="amount">Cout</label>
+        <input #amountField="ngModel" type="number" class="form-control" id="amount" aria-describedby="amount" placeholder="Tapez le cout de cette réparation" required
+          [(ngModel)]="addRepair.amount" name="amount"/>
+        <div *ngIf="!amountField.valid && amountField.touched">
+          <small *ngIf="amountField.errors?.['required']">Le cout est requis.</small>
+        </div>
+      </div>
+      <button
+          type="submit"
+          class="btn btn-secondary mt-3"
+          [disabled]="!newRepair.form.valid"
+        >
+          Ajouter
+      </button>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close()">Save</button>
+	</div>
+</ng-template>

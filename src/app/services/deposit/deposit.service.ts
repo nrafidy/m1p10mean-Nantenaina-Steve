@@ -1,14 +1,33 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, Inject } from '@angular/core';
+import { APP_SERVICE_CONFIG } from 'src/app/appconfig/appconfig.service';
+import { Appconfig } from 'src/app/interfaces/appconfig.interface';
+import { Car } from 'src/app/models/Car.model';
 import { Repair } from 'src/app/models/Repair.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepositService {
+  private depUrl: string;
 
-  constructor() { }
+  constructor(
+    @Inject(APP_SERVICE_CONFIG) private config: Appconfig,
+    private http: HttpClient,
+  ) {
+    this.depUrl = config.apiEndpoint.concat("api/deposit/");
+  }
 
-  getRepairs(): Repair[]{
+  addDeposit(car: Car){
+    const access_token = JSON.parse(localStorage.getItem('user_token') as string);
+    return this.http.post<Car>(this.depUrl.concat('create/').concat(car.vin), { access_token: access_token._id });
+  }
+
+  collect(car: Car){
+
+  }
+
+  static getRepairs(): Repair[]{
     return [
       {ID:'1', name:"Remplacement disque d'embrayage", state:"todo", amount:100000, payment:'pending', type:'repair'},
       {ID:'2', name:"Redressage carrosserie", state:"in_progress", amount:120000, payment:'done', type:'repair'},

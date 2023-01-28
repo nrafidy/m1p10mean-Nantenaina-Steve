@@ -5,7 +5,7 @@
   }
 }
 
-input.ng-invalid.ng-touched:not(:focus){
+input.ng-invalid.ng-touched:not(:focus), .red{
   border-color: red;
   border-left: 5px solid red;
 }

@@ -6,7 +6,7 @@ import { AdminHistoryComponent } from './admin-history/admin-history.component';
 import { AdminVoituresComponent } from './admin-voitures/admin-voitures.component';
 import { AdminComponent } from './admin/admin.component';
 import { ClientHomeComponent } from './client-home/client-home.component';
-// import { LoggedInGuard } from './guards/logged-in.guard';
+import { LoggedInGuard } from './guards/logged-in.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'home', component: ClientHomeComponent },
   {
     path: 'admin', component: AdminComponent,
-      // canActivate: [LoggedInGuard],
+      canActivate: [LoggedInGuard],
       children: [
         { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         { path: 'dashboard', component: AdminDashboardComponent },

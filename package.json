@@ -38,6 +38,8 @@
     "imagekitio-angular": "^1.0.2",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.3",
+    "ngx-dropzone": "^3.1.0",
+    "ngx-spinner": "^15.0.1",
     "nodejs-nodemailer-outlook": "^1.2.4",
     "nodemailer": "^6.9.0",
     "nodemon": "^2.0.20",
