@@ -3,9 +3,10 @@
     <input
       type="text"
       class="form-control"
-      placeholder="Vous cherchez une facture particulière ?"
+      placeholder="Vous cherchez une voiture particulière ?"
       aria-label="search-bill"
       aria-describedby="search-bill"
+      [(ngModel)] = "search" name="search"
     />
     <div class="input-group-append ms-3">
       <span class="input-group-text" id="search-bill">Rechercher</span>
@@ -13,55 +14,20 @@
   </div>
   <div class="content mt-3">
     <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-      <ngb-panel *ngFor="let car of cars">
+      <ngb-panel *ngFor="let car of cars | filter: search">
         <ng-template ngbPanelTitle>
           <div class="d-inline-flex">
-            <h5 class="accordion-title">BMW e30</h5>
-            <button class="btn btn-primary ms-3">Récupérer</button>
-            <button class="btn btn-primary ms-3">Receptionner</button>
-            <button class="btn btn-primary ms-3">Sortie</button>
+            <h5 class="accordion-title">{{car.make}} {{car.model}} | {{car.vin}}</h5>
           </div>
         </ng-template>
         <ng-template ngbPanelContent class="d-flex">
           <div class="row">
             <div class="panel-left col-2">
               <img
-                src="../../assets/img/e30.jpg"
+                src="../../assets/img/car_placeholder.jpg"
                 alt="card-pic"
                 class="card-img-top"
               />
-              <hr class="m-0 mt-3" />
-              <small class="card-title">Avancements</small>
-              <p class="mt-2 mb-0">
-                <ngb-progressbar
-                  type="danger"
-                  [value]="75"
-                  [max]="100"
-                  [striped]="true"
-                  [animated]="true"
-                  height="10px"
-                ></ngb-progressbar>
-              </p>
-              <p class="mt-2 mb-0">
-                <ngb-progressbar
-                  type="warning"
-                  [value]="75"
-                  [max]="100"
-                  [striped]="true"
-                  [animated]="true"
-                  height="10px"
-                ></ngb-progressbar>
-              </p>
-              <p class="mt-2 mb-0">
-                <ngb-progressbar
-                  type="info"
-                  [value]="75"
-                  [max]="100"
-                  [striped]="true"
-                  [animated]="true"
-                  height="10px"
-                ></ngb-progressbar>
-              </p>
             </div>
             <div class="panel-right col">
               <table matSort class="table table-striped">
@@ -77,7 +43,7 @@
                   <tr class="table-secondary">
                     <td>
                       Depot du
-                      {{ deposit.createdAt | date : "fullDate" : "fr-FR" }}
+                      {{ deposit.createdAt | date : "dd-MM-YYYY" }}
                     </td>
                   </tr>
                   <tr *ngFor="let repair of deposit.repairs">
@@ -95,3 +61,4 @@
     </ngb-accordion>
   </div>
 </div>
+<ngx-spinner type="square-jelly-box"></ngx-spinner>

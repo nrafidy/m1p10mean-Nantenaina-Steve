@@ -5,6 +5,7 @@ import { Appconfig } from 'src/app/interfaces/appconfig.interface';
 import { Car } from 'src/app/models/Car.model';
 import { User } from 'src/app/models/User.model';
 import { DepositService } from '../deposit/deposit.service';
+import { LocalStorageService } from '../localstorage/localstorage.service';
 import { RepairService } from '../repair/repair.service';
 import { UserService } from '../user/user.service';
 
@@ -17,6 +18,7 @@ export class CarService {
   constructor(
     @Inject(APP_SERVICE_CONFIG) private config: Appconfig,
     private http: HttpClient,
+    private lService: LocalStorageService
   ) {
     this.carUrl = config.apiEndpoint.concat("api/car/");
   }
@@ -33,78 +35,22 @@ export class CarService {
     return this.http.post<Car>(this.carUrl.concat('create'), data);
   }
 
-  getCars(): Car[]{
-    return [
-      {
-        ID: '1',
-        color:'red',
-        deposits:[
-          {
-            ID:'1',
-            payment:'pending',
-            state:'received',
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            repairs: DepositService.getRepairs()
-          },
-          {
-            ID:'1',
-            payment:'pending',
-            state:'received',
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            repairs: DepositService.getRepairs()
-          },
-        ],
-        make:'BMW',
-        model:'e30',
-        vin:'123456789'
-      },
-      {
-        ID: '1',
-        color:'red',
-        deposits:[{
-          ID:'1',
-          payment:'pending',
-          state:'received',
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          repairs: DepositService.getRepairs()
-        }],
-        make:'BMW',
-        model:'e30',
-        vin:'123456789'
-      },
-      {
-        ID: '1',
-        color:'red',
-        deposits:[{
-          ID:'1',
-          payment:'pending',
-          state:'received',
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          repairs: DepositService.getRepairs()
-        }],
-        make:'BMW',
-        model:'e30',
-        vin:'123456789'
-      },
-      {
-        ID: '1',
-        color:'red',
-        deposits:[{
-          ID:'1',
-          payment:'pending',
-          state:'received',
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          repairs: DepositService.getRepairs()
-        }],
-        make:'BMW',
-        model:'e30',
-        vin:'123456789'
-      }
-    ];
+  getCarsByUser(user: User){
+    return this.http.get(this.carUrl.concat('user/').concat(user.ID));
+  }
+
+  getCarById(ID: string){
+    return this.http.get(this.carUrl.concat('id/').concat(ID));
+  }
+
+  getCarByMatricule(matricule: string){
+    // const data = {
+    //   access_token: JSON.parse(localStorage.getItem('user_token') as string)._id
+    // }
+    return this.http.get(this.carUrl.concat(matricule));
+  }
+
+  getCars(){
+    return this.http.get(this.carUrl.concat('all'));
   }
 }

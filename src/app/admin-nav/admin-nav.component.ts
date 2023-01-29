@@ -8,6 +8,7 @@ import { faAnglesLeft, faAnglesRight, faCar, faDoorOpen, faFolder, faHouseChimne
   styleUrls: ['./admin-nav.component.scss']
 })
 export class AdminNavComponent {
+  userType = '';
   isExpanded = true;
   faHome = faHouseChimney;
   faCar = faCar;
@@ -20,6 +21,10 @@ export class AdminNavComponent {
   constructor(private router: Router){}
 
   handleSidebarToggle = () => this.isExpanded = !this.isExpanded;
+
+  ngOnInit(){
+    this.userType = JSON.parse(localStorage.getItem('user_token') as string).user.type;
+  }
 
   logout(){
     localStorage.removeItem("user_token");

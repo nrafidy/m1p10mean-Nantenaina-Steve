@@ -34,7 +34,7 @@
         <div class="nav-title ms-2" *ngIf="isExpanded">Voitures</div>
       </div>
     </div>
-    <div class="nav-item mt-1">
+    <div class="nav-item mt-1" *ngIf="userType !== 'res_atelier'">
       <div
         class="nav-link d-inline-flex align-items-center mx-3"
         [routerLink]="['/admin/factures']"
@@ -44,7 +44,7 @@
         <div class="nav-title ms-2" *ngIf="isExpanded">Factures</div>
       </div>
     </div>
-    <div class="nav-item mt-1">
+    <div class="nav-item mt-1" *ngIf="userType === 'client'">
       <div
         class="nav-link d-inline-flex align-items-center mx-3"
         [routerLink]="['/admin/historiques']"

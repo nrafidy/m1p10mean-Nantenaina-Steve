@@ -29,4 +29,52 @@ export class RepairService {
     }
     return this.http.post(this.url.concat('create'), data);
   }
+
+  getRepairs(deposit: Deposit){
+    return this.http.get(this.url.concat('deposit/').concat(deposit.ID));
+  }
+
+  markPaid(repair: Repair){
+    const data = {
+      type: repair.type,
+      name: repair.name,
+      montant: repair.amount,
+      State: repair.state,
+      paiement: 'done'
+    }
+    return this.http.put(this.url.concat('update/').concat(repair.ID), data);
+  }
+
+  markDone(repair: Repair){
+    const data = {
+      type: repair.type,
+      name: repair.name,
+      montant: repair.amount,
+      State: 'done',
+      paiement: repair.payment
+    }
+    return this.http.put(this.url.concat('update/').concat(repair.ID), data);
+  }
+
+  markInProgress(repair: Repair){
+    const data = {
+      type: repair.type,
+      name: repair.name,
+      montant: repair.amount,
+      State: 'in_progress',
+      paiement: repair.payment
+    }
+    return this.http.put(this.url.concat('update/').concat(repair.ID), data);
+  }
+
+  markCancelled(repair: Repair){
+    const data = {
+      type: repair.type,
+      name: repair.name,
+      montant: repair.amount,
+      State: 'cancelled',
+      paiement: repair.payment
+    }
+    return this.http.put(this.url.concat('update/').concat(repair.ID), data);
+  }
 }

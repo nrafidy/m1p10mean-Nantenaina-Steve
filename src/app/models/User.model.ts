@@ -9,7 +9,6 @@ export class User{
     public password: string,
     public type: UserType,
     public validationEmail: boolean,
-    public cars: Car[],
     public access_token: string
   ){}
 }

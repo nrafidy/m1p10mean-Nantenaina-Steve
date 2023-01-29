@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ResAtelierGuard implements CanActivate {
+export class ClientGuard implements CanActivate {
   constructor(private router: Router){}
 
   canActivate(
@@ -14,7 +14,7 @@ export class ResAtelierGuard implements CanActivate {
 
     const userToken = JSON.parse(localStorage.getItem('user_token') as string);
     if(userToken){
-      if(new Date(userToken?.datePeremption) < new Date() || userToken?.user.type !== 'res_atelier'){
+      if(new Date(userToken?.datePeremption) < new Date() || userToken?.user.type !== 'client'){
         localStorage.removeItem('user_token');
         this.router.navigateByUrl('/');
         return false;
@@ -24,5 +24,4 @@ export class ResAtelierGuard implements CanActivate {
     this.router.navigateByUrl('/');
     return false;
   }
-
 }

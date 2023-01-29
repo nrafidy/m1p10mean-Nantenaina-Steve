@@ -8,6 +8,7 @@ export class Car{
     public make: string,
     public model: string,
     public vin: string,
-    public deposits: Deposit[]
+    public deposits: Deposit[],
+    public userID: string
   ){}
 }

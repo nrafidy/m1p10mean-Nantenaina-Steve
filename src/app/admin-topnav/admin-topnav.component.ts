@@ -12,6 +12,7 @@ import { take } from 'rxjs';
 import { CarService } from '../services/car/car.service';
 import { DepositService } from '../services/deposit/deposit.service';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../services/localstorage/localstorage.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./admin-topnav.component.scss']
 })
 export class AdminTopnavComponent {
+  userType = '';
   faUser = faUser;
   files: File[] = [];
   currentUser!: User;
@@ -29,7 +31,8 @@ export class AdminTopnavComponent {
     make: '',
     model: '',
     vin: '',
-    deposits: []
+    deposits: [],
+    userID: ''
   };
 
   constructor(
@@ -39,11 +42,13 @@ export class AdminTopnavComponent {
     private userService: UserService,
     private carService: CarService,
     private depService: DepositService,
+    private lService: LocalStorageService,
     private router: Router
   ) {}
 
   ngOnInit(){
     this.currentUser = this.userService.getUserFromLocalStorage();
+    this.userType = JSON.parse(localStorage.getItem('user_token') as string).user.type;
   }
 
 	open(content: any) {
@@ -51,45 +56,35 @@ export class AdminTopnavComponent {
 	}
 
   submitCar(){
-    const dService = this.depService;
-    const mService = this.modalService;
-    const r = this.router;
-    let userToken = JSON.parse(localStorage.getItem('user_token') as string);
+    const _cService = this.carService;
+    const _router = this.router;
+    const _mService = this.modalService;
+    const _lService = this.lService;
     this.carService.addCar(this.addCar).pipe(take(1)).subscribe({
-      next(value) {
-        const res = JSON.parse(JSON.stringify(value));
-        const car: Car = {
-          ID: res.car._id,
-          color: '',
-          make: res.car.marque,
-          model: res.car.model,
-          vin: res.car.matricule,
-          deposits: []
-        }
-        dService.addDeposit(car).pipe(take(1)).subscribe({
-          next(value) {
-            const deposit = JSON.parse(JSON.stringify(value)).deposit;
-            car.deposits.push({
-              ID: deposit._id,
-              state: deposit.State,
-              payment: deposit.Paiement,
-              createdAt: deposit.createdDate,
-              updatedAt: deposit.updatedDate,
-              repairs: []
+      next(v) {
+        _cService.getCarsByUser(JSON.parse(localStorage.getItem('user_token') as string).user).pipe(take(1)).subscribe(val => {
+          const lCars: Car[] = [];
+          const value = JSON.parse(JSON.stringify(val));
+          value.forEach((element: any) => {
+            lCars.push({
+              ID: element._id,
+              color: '',
+              make: element.marque,
+              model: element.model,
+              vin: element.matricule,
+              userID: element.user,
+              deposits: []
             });
-            userToken.user.cars.push(car);
-            localStorage.setItem('user_token', JSON.stringify(userToken));
-            mService.dismissAll();
-            r.navigate(['/admin/voitures']);
-          },
-          error(err) {
-              console.log(err);
-          },
+          });
+          _lService.setItem('cars', JSON.stringify(lCars));
+          _mService.dismissAll();
+          _router.navigate(['/admin/voitures']);
         });
-          console.log(value);
       },
       error(err) {
-          console.log(err);
+          alert('Cette voiture existe deja');
+          _mService.dismissAll();
+          _router.navigate(['/admin/voitures']);
       },
       complete() {
 

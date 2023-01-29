@@ -8,14 +8,14 @@
       </div>
     </div>
     <div>
-      <div class="btn btn-secondary" (click)="open(content)">Déposer une voiture</div>
+      <div class="btn btn-secondary" (click)="open(content)" *ngIf="userType === 'client'">Ajouter une voiture</div>
     </div>
   </div>
 </div>
 
 <ng-template #content let-modal>
 	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Déposer une nouvelle voiture</h4>
+		<h4 class="modal-title" id="modal-basic-title">Ajouter une nouvelle voiture</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
@@ -49,12 +49,9 @@
           class="btn btn-secondary mt-3"
           [disabled]="!newCar.form.valid"
         >
-          Déposer
+          Ajouter
       </button>
 		</form>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-dark" (click)="modal.close()">Save</button>
 	</div>
 </ng-template>
 

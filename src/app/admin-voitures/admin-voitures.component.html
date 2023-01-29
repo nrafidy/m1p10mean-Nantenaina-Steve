@@ -1,13 +1,15 @@
 <div class="container-fluid p-0 px-5 mt-3">
   <div class="input-group">
-    <input type="text" class="form-control" placeholder="Vous cherchez une voiture particulière ?" aria-label="search-car" aria-describedby="search-car">
+    <input type="text" class="form-control" placeholder="Vous cherchez une voiture particulière ?"
+      aria-label="search-car" aria-describedby="search-car"
+      [(ngModel)] = 'search' name="search">
     <div class="input-group-append ms-3">
       <span class="input-group-text" id="search-car">Rechercher</span>
     </div>
   </div>
   <div class="content">
     <div class="row d-flex flex-wrap">
-      <div class="card-container mt-3" *ngFor="let car of cars; let i = index" [attr.data-index]="i">
+      <div class="card-container mt-3" *ngFor="let car of cars | filter: search; let i = index" [attr.data-index]="i">
         <div class="card">
           <div class="card-header d-inline-flex justify-content-between align-items-center">
             <div class="header-left d-inline-flex">
@@ -27,20 +29,19 @@
             <div class="header-right d-flex flex-column align-items-end">
               <span class="card-title m-0">{{ car.make }}</span>
               <span class="card-title m-0">{{ car.model }}</span>
-              <span class="card-title m-0">{{ car.vin }}</span>
             </div>
           </div>
           <div class="card-body"  (click)="openRepair(car, i)">
             <img src="../../assets/img/car_placeholder.jpg" alt="card-pic" class="card-img-top">
-            <hr class="m-0 mt-3">
-            <small class="card-title">Avancements</small>
-            <p class="mt-1 mb-0"><ngb-progressbar type="danger" [value]="75" [max]="100" [striped]="true" [animated]="true" height="5px"></ngb-progressbar></p>
-            <p class="mt-1 mb-0"><ngb-progressbar type="warning" [value]="75" [max]="100" [striped]="true" [animated]="true" height="5px"></ngb-progressbar></p>
-            <p class="mt-1 mb-0"><ngb-progressbar type="info" [value]="75" [max]="100" [striped]="true" [animated]="true" height="5px"></ngb-progressbar></p>
+            <hr class="m-0 my-3">
+            <small class="card-title text-center">{{ car.vin }}</small>
           </div>
-          <div class="card-footer">
+          <!-- <div class="card-footer">
+            <button class="btn btn-outline-secondary" (click)="deposit(car)">Déposer</button>
+            <button class="btn btn-outline-secondary" (click)="accept(car)">Réceptionner</button>
             <button class="btn btn-outline-secondary" (click)="collect(car)">Récupérer</button>
-          </div>
+            <button class="btn btn-outline-secondary" (click)="release(car)">Sortie</button>
+          </div> -->
         </div>
       </div>
     </div>

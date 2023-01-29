@@ -9,7 +9,11 @@ import { Appconfig } from '../interfaces/appconfig.interface';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { RepairService } from '../services/repair/repair.service';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
+import { LocalStorageService } from '../services/localstorage/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Deposit } from '../models/Deposit.model';
+import { UserType } from '../models/User.model';
 
 
 @Component({
@@ -18,6 +22,10 @@ import { take } from 'rxjs';
   styleUrls: ['./admin-repair.component.scss']
 })
 export class AdminRepairComponent {
+  canCollect = true;
+  allPaid = true;
+  userType!: UserType;
+  storageSub!: Subscription;
   addRepair: Repair = {
     ID: '',
     type: 'repair',
@@ -34,11 +42,23 @@ export class AdminRepairComponent {
   sortedMaintenances: Repair[] = [];
   sortedDiags: Repair[] = [];
 
+  repairAdv = 0;
+  maintenanceAdv = 0;
+  diagAdv = 0;
+
   compare = (a: number | string, b: number | string, isAsc: boolean) => {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
-  @Input() car!: Car;
+  car: Car = {
+    ID: '',
+    color: '',
+    make: '',
+    model: '',
+    vin: '',
+    deposits: [],
+    userID: ''
+  };
   @Input() carIndex!: number;
 
 	constructor(
@@ -47,68 +67,201 @@ export class AdminRepairComponent {
     @Inject(APP_SERVICE_CONFIG) private config: Appconfig,
     private http: HttpClient,
     private modalService: NgbModal,
-    private repairService: RepairService
-  ) {}
+    private repairService: RepairService,
+    private lService: LocalStorageService,
+    private spinner: NgxSpinnerService
+  ) {
 
-  ngOnInit(){
-    const allRepairs = DepositService.getRepairs();
-    allRepairs.forEach(repair => {
-      if(repair.type == 'repair'){
-        this.repairs.push(repair);
-      }
-      if(repair.type == 'maintenance'){
-        this.maintenances.push(repair);
-      }
-      if(repair.type == 'diagnostic'){
-        this.diags.push(repair);
+  }
+
+  setRepairs(){
+    this.canCollect = true;
+    this.allPaid = true;
+    this.spinner.show();
+    this.repairs = [];
+    this.maintenances = [];
+    this.diags = [];
+    let lCars: Car[] = JSON.parse(localStorage.getItem('cars') as string);
+    this.depositService.getOnGoing(lCars[this.carIndex]).pipe(take(1)).subscribe((val) => {
+      if(val){
+        const value = JSON.parse(JSON.stringify(val));
+        let depot: Deposit = {
+          ID: value._id,
+          state: value.State,
+          payment: value.Paiement,
+          createdAt: value.createdDate,
+          updatedAt: value.updatedDate,
+          repairs: []
+        }
+        lCars[this.carIndex].deposits = [];
+        lCars[this.carIndex].deposits.push(depot);
+        this.repairService.getRepairs(depot).pipe(take(1)).subscribe(val => {
+          const value = JSON.parse(JSON.stringify(val));
+          value.forEach((element: any) => {
+            depot.repairs.push({
+              ID: element._id,
+              type: element.type,
+              state: element.State,
+              name: element.name,
+              amount: element.montant,
+              payment: element.paiement
+            });
+          });
+          const allRepairs = depot.repairs;
+          allRepairs.forEach(repair => {
+            if(repair.payment === 'pending'){
+              this.allPaid = false;
+            }
+            if(repair.state !== 'done'){
+              this.canCollect = false;
+            }
+            if(repair.type == 'repair'){
+              this.repairs.push(repair);
+            }
+            if(repair.type == 'maintenance'){
+              this.maintenances.push(repair);
+            }
+            if(repair.type == 'diagnostic'){
+              this.diags.push(repair);
+            }
+          });
+          this.setScore();
+          this.sortedRepairs = this.repairs.slice();
+          this.sortedMaintenances = this.maintenances.slice();
+          this.sortedDiags = this.diags.slice();
+
+          this.car = lCars[this.carIndex];
+          localStorage.setItem('cars', JSON.stringify(lCars));
+          this.spinner.hide();
+        });
+      } else {
+        lCars[this.carIndex].deposits = [];
+        this.canCollect = true;
+        this.car = lCars[this.carIndex];
+        localStorage.setItem('cars', JSON.stringify(lCars));
+        this.spinner.hide();
       }
     });
-    this.sortedRepairs = this.repairs.slice();
-    this.sortedMaintenances = this.maintenances.slice();
-    this.sortedDiags = this.diags.slice();
+  }
+
+  ngOnInit(){
+    this.userType = JSON.parse(localStorage.getItem('user_token') as string).user.type;
+    this.setRepairs();
+    this.storageSub = this.lService.watchStorage().subscribe((val) => this.setRepairs());
+  }
+
+  ngOnDestroy(){
+    this.storageSub.unsubscribe();
   }
 
   submitRepair(){
-    console.log(this.addRepair);
-    let repairs = this.repairs;
-    let maintenances = this.maintenances;
-    let diags = this.diags;
-    let userToken = JSON.parse(localStorage.getItem('user_token') as string);
-    let index = this.carIndex;
-    this.repairService.addRepair(this.car.deposits[0], this.addRepair).pipe(take(1)).subscribe({
-      next(value) {
-        const res = JSON.parse(JSON.stringify(value)).repair;
-        const repair: Repair = {
-          ID: res._id,
-          type: res.type,
-          state: res.State,
-          name: res.Name,
-          amount: res.montant,
-          payment: res.paiement,
-        }
-        // if(repair.type == 'repair'){
-        //   repairs.push(repair);
-        // }
-        // if(repair.type == 'maintenance'){
-        //   maintenances.push(repair);
-        // }
-        // if(repair.type == 'diagnostic'){
-        //   diags.push(repair);
-        // }
-        userToken.user.cars[index].deposits[0].repairs.push(repair);
-        localStorage.setItem('user_token', JSON.stringify(userToken));
-      },
-      error(err) {
+    this.spinner.show();
+    this.repairService.addRepair(this.car.deposits[0], this.addRepair).pipe(take(1)).subscribe(val => {
+      const value = JSON.parse(JSON.stringify(val));
+      let lCars: Car[] = JSON.parse(localStorage.getItem('cars') as string);
+      this.modalService.dismissAll();
+      this.lService.setItem('cars', JSON.stringify(lCars));
+      this.spinner.hide();
+    });
+  }
 
-      },complete() {
+  markDeposit(){
+    this.depositService.addDeposit(this.car).pipe(take(1)).subscribe(val => {
+      this.setRepairs();
+    });
+  }
 
-      },
+  markPending(){
+    this.depositService.markPending(this.car.deposits[0]).pipe(take(1)).subscribe(val => {
+      this.setRepairs();
+    });
+  }
+
+  markReceived(){
+    this.depositService.markReceived(this.car.deposits[0]).pipe(take(1)).subscribe(val => {
+      this.setRepairs();
+    });
+  }
+
+  markReady(){
+    this.depositService.markReady(this.car.deposits[0]).pipe(take(1)).subscribe(val => {
+      this.setRepairs();
+    });
+  }
+
+  markCollected(){
+    this.depositService.markCollected(this.car.deposits[0]).pipe(take(1)).subscribe(val => {
+      this.setRepairs();
+      alert('Bon de sortie approuvé');
+    });
+  }
+
+  markDone(repair: Repair){
+    this.spinner.show();
+    this.repairService.markDone(repair).pipe(take(1)).subscribe(val => {
+      let lCars: Car[] = JSON.parse(localStorage.getItem('cars') as string);
+      this.lService.setItem('cars', JSON.stringify(lCars));
+      this.spinner.hide();
+    });
+  }
+
+  markPaid(repair: Repair){
+    this.spinner.show();
+    this.repairService.markPaid(repair).pipe(take(1)).subscribe(val => {
+      let lCars: Car[] = JSON.parse(localStorage.getItem('cars') as string);
+      this.lService.setItem('cars', JSON.stringify(lCars));
+      this.spinner.hide();
+    });
+  }
+
+  markCancelled(repair: Repair){
+    this.spinner.show();
+    this.repairService.markCancelled(repair).pipe(take(1)).subscribe(val => {
+      let lCars: Car[] = JSON.parse(localStorage.getItem('cars') as string);
+      this.lService.setItem('cars', JSON.stringify(lCars));
+      this.spinner.hide();
+    });
+  }
+
+  markInProgress(repair: Repair){
+    this.spinner.show();
+    this.repairService.markInProgress(repair).pipe(take(1)).subscribe(val => {
+      let lCars: Car[] = JSON.parse(localStorage.getItem('cars') as string);
+      this.lService.setItem('cars', JSON.stringify(lCars));
+      this.spinner.hide();
     });
   }
 
   open(content: any) {
 		this.modalService.open(content, { ariaLabelledBy: 'modal-login-title', centered: true });
 	}
+
+  setScore(){
+    this.repairAdv = 0;
+    this.maintenanceAdv = 0;
+    this.diagAdv = 0;
+
+    this.repairs.forEach(element => {
+      if(element.state === 'done' || element.state === 'cancelled'){
+        this.repairAdv++;
+      }
+    });
+    this.repairAdv = this.repairAdv / this.repairs.length  * 100;
+
+    this.maintenances.forEach(element => {
+      if(element.state === 'done' || element.state === 'cancelled'){
+        this.maintenanceAdv++;
+      }
+    });
+    this.maintenanceAdv = this.maintenanceAdv / this.maintenances.length  * 100;
+
+    this.diags.forEach(element => {
+      if(element.state === 'done' || element.state === 'cancelled'){
+        this.diagAdv++;
+      }
+    });
+    this.diagAdv = this.diagAdv / this.diags.length * 100;
+  }
 
   sortRep(sort: Sort) {
     const data = this.repairs.slice();

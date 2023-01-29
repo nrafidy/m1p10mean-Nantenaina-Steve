@@ -177,4 +177,44 @@ router.put(
   }
 );
 
+router.get("/deposit/:depositId", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const result = await db
+      .collection("Repair")
+      .find({
+        deposit: mongoose.Types.ObjectId(req.params.depositId),
+      })
+      .toArray();
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
+router.put("/update/:id", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const result = await db.collection("Repair").updateOne(
+      {
+        _id: mongoose.Types.ObjectId(req.params.id),
+      },
+      {
+        $set: {
+          type: req.body.type,
+          State: req.body.State,
+          name: req.body.name,
+          montant: req.body.montant,
+          paiement: req.body.paiement,
+        },
+      }
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
 module.exports = router;

@@ -6,7 +6,9 @@ import { AdminHistoryComponent } from './admin-history/admin-history.component';
 import { AdminVoituresComponent } from './admin-voitures/admin-voitures.component';
 import { AdminComponent } from './admin/admin.component';
 import { ClientHomeComponent } from './client-home/client-home.component';
+import { ClientGuard } from './guards/client.guard';
 import { LoggedInGuard } from './guards/logged-in.guard';
+import { ResFinanceGuard } from './guards/res-finance.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
@@ -19,8 +21,8 @@ const routes: Routes = [
         { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         { path: 'dashboard', component: AdminDashboardComponent },
         { path: 'voitures', component: AdminVoituresComponent},
-        { path: 'factures', component: AdminFactureComponent},
-        { path: 'historiques', component: AdminHistoryComponent},
+        { path: 'factures', component: AdminFactureComponent, canActivate: [ResFinanceGuard],},
+        { path: 'historiques', component: AdminHistoryComponent, canActivate: [ClientGuard],},
     ]
   },
   { path: '**', component: NotFoundComponent },

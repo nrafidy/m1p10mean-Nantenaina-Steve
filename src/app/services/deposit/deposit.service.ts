@@ -3,6 +3,7 @@ import { Injectable, Inject } from '@angular/core';
 import { APP_SERVICE_CONFIG } from 'src/app/appconfig/appconfig.service';
 import { Appconfig } from 'src/app/interfaces/appconfig.interface';
 import { Car } from 'src/app/models/Car.model';
+import { Deposit } from 'src/app/models/Deposit.model';
 import { Repair } from 'src/app/models/Repair.model';
 
 @Injectable({
@@ -19,27 +20,72 @@ export class DepositService {
   }
 
   addDeposit(car: Car){
-    const access_token = JSON.parse(localStorage.getItem('user_token') as string);
-    return this.http.post<Car>(this.depUrl.concat('create/').concat(car.vin), { access_token: access_token._id });
+    // const access_token = JSON.parse(localStorage.getItem('user_token') as string);
+    return this.http.post<Car>(this.depUrl.concat('create/car/').concat(car.ID), { user: car.userID });
   }
 
-  collect(car: Car){
-
+  markReceived(deposit: Deposit){
+    const data = {
+      State: 'received',
+      paiement: deposit.payment
+    }
+    return this.http.put(this.depUrl.concat('update/_/').concat(deposit.ID), data);
   }
 
-  static getRepairs(): Repair[]{
-    return [
-      {ID:'1', name:"Remplacement disque d'embrayage", state:"todo", amount:100000, payment:'pending', type:'repair'},
-      {ID:'2', name:"Redressage carrosserie", state:"in_progress", amount:120000, payment:'done', type:'repair'},
-      {ID:'3', name:"Nettoyage injecteur", state:"done", amount:150000, payment:'pending', type:'repair'},
-
-      {ID:'4', name:"Changement huile moteur", state:"todo", amount:150000, payment:'done', type:'maintenance'},
-      {ID:'5', name:"Purge des freins", state:"in_progress", amount:150000, payment:'pending', type:'maintenance'},
-      {ID:'6', name:"Changement plaquettes de frein", state:"done", amount:150000, payment:'pending', type:'maintenance'},
-
-      {ID:'7', name:"Diagnostique ABS", state:"todo", amount:150000, payment:'pending', type:'diagnostic'},
-      {ID:'8', name:"Lecture données calculateur", state:"in_progress", amount:150000, payment:'pending', type:'diagnostic'},
-      {ID:'9', name:"Tune ECU", state:"done", amount:150000, payment:'done', type:'diagnostic'},
-    ];
+  markDone(deposit: Deposit){
+    const data = {
+      State: 'done',
+      paiement: deposit.payment
+    }
+    return this.http.put(this.depUrl.concat('update/_/').concat(deposit.ID), data);
   }
+
+  markPending(deposit: Deposit){
+    const data = {
+      State: 'pending',
+      paiement: deposit.payment
+    }
+    return this.http.put(this.depUrl.concat('update/_/').concat(deposit.ID), data);
+  }
+
+  markReady(deposit: Deposit){
+    const data = {
+      State: 'ready',
+      paiement: deposit.payment
+    }
+    return this.http.put(this.depUrl.concat('update/_/').concat(deposit.ID), data);
+  }
+
+  markCollected(deposit: Deposit){
+    const data = {
+      State: 'collected',
+      paiement: deposit.payment
+    }
+    return this.http.put(this.depUrl.concat('update/_/').concat(deposit.ID), data);
+  }
+
+  markCancelled(deposit: Deposit){
+    const data = {
+      State: 'cancelled',
+      paiement: deposit.payment
+    }
+    return this.http.put(this.depUrl.concat('update/_/').concat(deposit.ID), data);
+  }
+
+  markPaid(deposit: Deposit){
+    const data = {
+      State: deposit.state,
+      paiement: 'done'
+    }
+    return this.http.put(this.depUrl.concat('update/_/').concat(deposit.ID), data);
+  }
+
+  getOnGoing(car: Car){
+    return this.http.get(this.depUrl.concat('ongoing/car/').concat(car.ID));
+  }
+
+  getAll(car: Car){
+    return this.http.get(this.depUrl.concat('all/car/').concat(car.ID));
+  }
+
 }

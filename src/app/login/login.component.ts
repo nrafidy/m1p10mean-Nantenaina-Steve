@@ -4,6 +4,7 @@ import { UserService } from '../services/user/user.service';
 import { User } from '../models/User.model';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -22,13 +23,13 @@ export class LoginComponent {
     type: '',
     validationEmail: false,
     access_token: '',
-    cars: []
   }
 
 	constructor(
     private modalService: NgbModal,
     private userService: UserService,
     private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
 	open(content: any) {
@@ -40,6 +41,8 @@ export class LoginComponent {
   }
 
   loginSubmit(formData: any){
+    this.spinner.show();
+    const _spinner = this.spinner;
     const mService = this.modalService;
     const nav = this.router;
     this.userService.login(this.user).pipe(take(1)).subscribe({
@@ -53,35 +56,15 @@ export class LoginComponent {
           password: '',
           type: token.user.type,
           validationEmail: token.user.validationEmail === '1',
-          cars: [],
           access_token: token._id
         }
-        for(let i=0; i < token.user.car.length; i++){
-          user.cars.push({
-            ID: token.user.car[i]._id,
-            color: '',
-            make: token.user.car[i].marque,
-            model: token.user.car[i].model,
-            vin: token.user.car[i].matricule,
-            deposits: []
-          });
-          for(let j=0; j < token.user.car[i].deposit.length; j++){
-            user.cars[i].deposits.push({
-              ID: token.user.car[i].deposit[j]._id,
-              state: token.user.car[i].deposit[j].State,
-              payment: token.user.car[i].deposit[j].Paiement,
-              createdAt: token.user.car[i].deposit[j].createdDate,
-              updatedAt: token.user.car[i].deposit[j].updatedDate,
-              repairs: []
-            });
-          }
-        };
         const userToken = {
           _id: token._id,
           datePeremption: token.datePeremption,
           user: user
         }
         localStorage.setItem('user_token', JSON.stringify(userToken));
+        _spinner.hide()
         mService.dismissAll();
         nav.navigate(['/admin']);
       },

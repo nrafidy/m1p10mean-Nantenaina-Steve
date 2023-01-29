@@ -81,7 +81,7 @@ router.post(
       //   lastDeposit &&
       //   (lastDeposit.State !== "collected" || lastDeposit.State !== "cancelled")
       // ) {
-      const stillDeposit = false;
+      let stillDeposit = false;
       car.deposit.forEach((element) => {
         if (element.State !== "collected" || element.State !== "cancelled") {
           stillDeposit = true;
@@ -193,5 +193,91 @@ router.put(
     }
   }
 );
+
+router.get("/ongoing/car/:carId", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const result = await db.collection("Deposit").findOne({
+      car: mongoose.Types.ObjectId(req.params.carId),
+      State: {
+        $nin: ["cancelled", "collected"],
+      },
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
+router.get("/all/car/:carId", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const result = await db
+      .collection("Deposit")
+      .find({
+        car: mongoose.Types.ObjectId(req.params.carId),
+      })
+      .toArray();
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
+router.put("/update/_/:id", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const result = await db.collection("Deposit").updateOne(
+      {
+        _id: mongoose.Types.ObjectId(req.params.id),
+      },
+      {
+        $set: {
+          State: req.body.State,
+          Paiement: req.body.Paiement,
+          updatedDate: new Date(),
+        },
+      }
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
+router.post("/create/car/:carId", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const dep = await db.collection("Deposit").findOne({
+      car: mongoose.Types.ObjectId(req.params.carId),
+      State: {
+        $nin: ["cancelled", "collected"],
+      },
+    });
+
+    if (dep) {
+      return res.status(500).json({ message: "deposit" });
+    }
+
+    let deposit = {
+      State: "deposit",
+      createdDate: new Date(),
+      updatedDate: new Date(),
+      Paiement: "pending",
+      reparation: [],
+      car: mongoose.Types.ObjectId(req.params.carId),
+      user: mongoose.Types.ObjectId(req.body.user),
+    };
+
+    const result = await db.collection("Deposit").insertOne(deposit);
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
 
 module.exports = router;

@@ -43,6 +43,7 @@ import { ResAtelierGuard } from './guards/res-atelier.guard';
 import { ResFinanceGuard } from './guards/res-finance.guard';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     NgxDropzoneModule,
     BrowserAnimationsModule,
     NgxSpinnerModule,
+    Ng2SearchPipeModule,
     ImagekitioAngularModule.forRoot({
       publicKey: environment.imageKitIoKey,
       urlEndpoint: environment.imageKitIoUrl,

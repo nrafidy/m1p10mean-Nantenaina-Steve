@@ -5,10 +5,17 @@
         <h5 class="offcanvas-title">{{ car.make }} {{ car.model }}</h5>
         <h5 class="offcanvas-title">{{ car.vin }}</h5>
       </div>
-      <button class="btn btn-primary ms-3">Récupérer</button>
-      <button class="btn btn-primary ms-3">Receptionner</button>
-      <button class="btn btn-primary ms-3">Sortie</button>
-      <button class="btn btn-outline-secondary ms-3">Factures</button>
+      <button class="btn btn-primary ms-3" (click)="markDeposit()" *ngIf="car.deposits.length === 0   && userType === 'client'">Déposer</button>
+      <button class="btn btn-primary ms-3" (click)="markPending()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'ready' && userType === 'client'">Récupérer</button>
+      <button class="btn btn-primary ms-3" (click)="markReceived()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'deposit' && userType === 'res_atelier'">Receptionner</button>
+      <button class="btn btn-primary ms-3" (click)="markReady()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'received'  && userType === 'res_atelier'" [disabled]="!canCollect">Pret</button>
+      <button class="btn btn-primary ms-3" (click)="markCollected()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'pending'  && userType === 'res_atelier'">Sortie</button>
+      <div>
+        <span *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'collected'">Vous pouvez recuperer votre voiture. Merci de votre confiance.</span>
+        <span class="ms-3" *ngIf="!canCollect">Il reste des réparations à effectuer.</span>
+        <span class="ms-3" *ngIf="!allPaid">Il reste des factures impayés.</span>
+      </div>
+      <!-- <button class="btn btn-outline-secondary ms-3">Factures</button> -->
     </div>
     <button
       type="button"
@@ -35,7 +42,7 @@
             <p class="mt-1 mb-0">
               <ngb-progressbar
                 type="danger"
-                [value]="75"
+                [value]="repairAdv"
                 [max]="100"
                 [striped]="true"
                 [animated]="true"
@@ -53,6 +60,7 @@
                   <th mat-sort-header="state">Avancement</th>
                   <th mat-sort-header="amount">Montant</th>
                   <th mat-sort-header="payment">Etat</th>
+                  <th mat-sort-header="payment">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -61,6 +69,12 @@
                   <td>{{ repair.state | repairState }}</td>
                   <td>{{ repair.amount | ariary }}</td>
                   <td>{{ repair.payment | paymentState }}</td>
+                  <td>
+                    <button class="btn btn-secondary"  (click)="markDone(repair)" *ngIf="repair.state === 'in_progress'  && userType === 'res_atelier'">Terminé</button>
+                    <button class="btn btn-secondary"  (click)="markPaid(repair)" *ngIf="repair.payment === 'pending' && userType === 'res_finance'">Payé</button>
+                    <button class="btn btn-primary"  (click)="markInProgress(repair)" *ngIf="repair.state === 'todo'  && userType === 'res_atelier'">Commencé</button>
+                    <!-- <button class="btn btn-primary"  (click)="markCancelled(repair)">Annuler</button> -->
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -79,7 +93,7 @@
             <p class="mt-1 mb-0">
               <ngb-progressbar
                 type="warning"
-                [value]="75"
+                [value]="maintenanceAdv"
                 [max]="100"
                 [striped]="true"
                 [animated]="true"
@@ -97,6 +111,7 @@
                   <th mat-sort-header="state">Avancement</th>
                   <th mat-sort-header="amount">Montant</th>
                   <th mat-sort-header="payment">Etat</th>
+                  <th mat-sort-header="payment">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -105,6 +120,12 @@
                   <td>{{ repair.state | repairState }}</td>
                   <td>{{ repair.amount | ariary }}</td>
                   <td>{{ repair.payment | paymentState }}</td>
+                  <td>
+                    <button class="btn btn-secondary"  (click)="markDone(repair)" *ngIf="repair.state === 'in_progress'  && userType === 'res_atelier'">Terminé</button>
+                    <button class="btn btn-secondary"  (click)="markPaid(repair)" *ngIf="repair.payment === 'pending' && userType === 'res_finance'">Payé</button>
+                    <button class="btn btn-primary"  (click)="markInProgress(repair)" *ngIf="repair.state === 'todo'  && userType === 'res_atelier'">Commencé</button>
+                    <!-- <button class="btn btn-primary"  (click)="markCancelled(repair)">Annuler</button> -->
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -123,7 +144,7 @@
             <p class="mt-1 mb-0">
               <ngb-progressbar
                 type="info"
-                [value]="75"
+                [value]="diagAdv"
                 [max]="100"
                 [striped]="true"
                 [animated]="true"
@@ -141,6 +162,7 @@
                   <th mat-sort-header="state">Avancement</th>
                   <th mat-sort-header="amount">Montant</th>
                   <th mat-sort-header="payment">Etat</th>
+                  <th mat-sort-header="payment">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -149,6 +171,12 @@
                   <td>{{ repair.state | repairState }}</td>
                   <td>{{ repair.amount | ariary }}</td>
                   <td>{{ repair.payment | paymentState }}</td>
+                  <td>
+                    <button class="btn btn-secondary"  (click)="markDone(repair)" *ngIf="repair.state === 'in_progress'  && userType === 'res_atelier'">Terminé</button>
+                    <button class="btn btn-secondary"  (click)="markPaid(repair)" *ngIf="repair.payment === 'pending' && userType === 'res_finance'">Payé</button>
+                    <button class="btn btn-primary"  (click)="markInProgress(repair)" *ngIf="repair.state === 'todo'  && userType === 'res_atelier'">Commencé</button>
+                    <!-- <button class="btn btn-primary"  (click)="markCancelled(repair)">Annuler</button> -->
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -158,7 +186,9 @@
     </div>
   </div>
   <div class="offcanvas-footer p-3">
-    <button class="btn btn-secondary"  (click)="open(repair)">Ajouter travaux</button>
+    <button class="btn btn-secondary"
+      (click)="open(repair)"
+      *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'received' && userType === 'res_atelier'">Ajouter travaux</button>
   </div>
 </div>
 
@@ -205,7 +235,5 @@
       </button>
 		</form>
 	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-dark" (click)="modal.close()">Save</button>
-	</div>
 </ng-template>
+<ngx-spinner type="square-jelly-box"></ngx-spinner>

@@ -165,9 +165,20 @@ router.delete(
   }
 );
 
+router.get("/all", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const result = await db.collection("Car").find({}).toArray();
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
 router.get(
   "/:matricule",
-  [check("access_token").isString()],
+  // [check("access_token").isString()],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -175,17 +186,20 @@ router.get(
     }
     try {
       const db = await dbo.getDb();
-      const token = req.body.access_token;
-      const verification = await verifyToken(token, db);
-      if (verification) {
-        return res.status(401).json(verification);
-      }
+      // const token = req.body.access_token;
+      // const verification = await verifyToken(token, db);
+      // if (verification) {
+      //   return res.status(401).json(verification);
+      // }
       let matricule = decodeURIComponent(req.params.matricule);
       let query = { "car.matricule": matricule };
-      let car = await db.collection("User").findOne(query);
-      if (!car) {
-        return res.status(404).json({ message: "car not found" });
-      }
+      // let car = await db.collection("User").findOne(query);
+      let car = await db.collection("Car").findOne({
+        matricule: matricule,
+      });
+      // if (!car) {
+      //   return res.status(404).json({ message: "car not found" });
+      // }
       return res.status(200).json(car);
     } catch (err) {
       console.log(err);
@@ -193,6 +207,38 @@ router.get(
     }
   }
 );
+
+router.get("/user/:userId", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const result = await db
+      .collection("Car")
+      .find({
+        user: mongoose.Types.ObjectId(req.params.userId),
+      })
+      .toArray();
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
+router.get("/id/:id", async function (req, res) {
+  try {
+    const db = dbo.getDb();
+
+    const result = await db
+      .collection("Car")
+      .find({
+        _id: mongoose.Types.ObjectId(req.params.id),
+      })
+      .toArray();
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
 
 router.get(
   "/matricule/:matricule",
