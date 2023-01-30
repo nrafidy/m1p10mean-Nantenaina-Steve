@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const dbo = require("../db/connect");
 
-// const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 router.get("/cajour/:date", async function (req, res) {
     try {
@@ -108,6 +108,34 @@ router.get("/beneficemois/:mois/:annee/:salaire/:loyer/:achat_piece/:autre_depen
     }catch (err) { 
         console.log(err);
         return res.status(500).json({ message: "error while doing a paiement" });
+    }
+    return res.status(200);
+});
+
+
+router.get("/moyennereparation/:carid", async function (req, res) {
+    try {
+        const db = await dbo.getDb();
+        var carid = req.params.carid;
+        const listeDeposit = await db.collection("Deposit").find({"car": mongoose.Types.ObjectId(carid)}).toArray();
+
+        var listeDuree = [];
+        for(let i=0;i<listeDeposit.length;i++){
+            var listeRepair = await db.collection("Repair").find({"deposit": mongoose.Types.ObjectId(listeDeposit[i]._id)}).toArray();
+            let total = 0;
+            for(let j = 0 ; j < listeRepair.length; j++){
+                var listedateRepair = await db.collection("dateReparation").find({"repair_id": mongoose.Types.ObjectId(listeRepair[j]._id)}).toArray();
+                for(let k=0;k<listedateRepair.length;k++){
+                    total+= parseFloat(listedateRepair[k].duree)
+                }
+            }
+            if(total > 0) listeDuree.push(total);
+        }
+        
+        return res.status(200).json({ result: listeDuree});
+    }catch (err) { 
+        console.log(err);
+        return res.status(500).json({ message: "error while get statistique" });
     }
     return res.status(200);
 });
