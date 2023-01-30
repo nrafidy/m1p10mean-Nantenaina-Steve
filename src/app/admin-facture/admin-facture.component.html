@@ -13,6 +13,7 @@
     </div>
   </div>
   <div class="content mt-3">
+    <div class="" *ngIf="cars.length === 0">Aucune Facture disponible</div>
     <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
       <ngb-panel *ngFor="let car of cars | filter: search; let i = index">
         <ng-template ngbPanelTitle>

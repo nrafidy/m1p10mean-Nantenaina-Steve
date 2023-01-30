@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 import { AppRoutingModule } from './app-routing.module';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -44,6 +44,7 @@ import { ResFinanceGuard } from './guards/res-finance.guard';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { FinanceOnlyGuard } from './guards/finance-only.guard';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,9 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     },
     LoggedInGuard,
     ResAtelierGuard,
-    ResFinanceGuard
+    ResFinanceGuard,
+    FinanceOnlyGuard,
+    DatePipe
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]

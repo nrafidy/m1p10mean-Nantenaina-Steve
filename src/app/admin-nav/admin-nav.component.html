@@ -12,7 +12,7 @@
         *ngIf="!isExpanded"
       ></fa-icon>
     </div>
-    <div class="nav-item">
+    <div class="nav-item" *ngIf="userType === 'res_finance'">
       <div
         class="nav-link d-inline-flex align-items-center mx-3"
         [routerLink]="['/admin/dashboard']"

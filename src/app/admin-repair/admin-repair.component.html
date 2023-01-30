@@ -8,7 +8,7 @@
       <button class="btn btn-primary ms-3" (click)="markDeposit()" *ngIf="car.deposits.length === 0   && userType === 'client'">Déposer</button>
       <button class="btn btn-primary ms-3" (click)="markPending()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'ready' && userType === 'client'">Récupérer</button>
       <button class="btn btn-primary ms-3" (click)="markReceived()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'deposit' && userType === 'res_atelier'">Receptionner</button>
-      <button class="btn btn-primary ms-3" (click)="markReady()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'received'  && userType === 'res_atelier'" [disabled]="!canCollect">Pret</button>
+      <button class="btn btn-primary ms-3" (click)="markReady()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'received'  && userType === 'res_atelier'" [disabled]="!canCollect && !allPaid">Pret</button>
       <button class="btn btn-primary ms-3" (click)="markCollected()" *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'pending'  && userType === 'res_atelier'">Sortie</button>
       <div>
         <span *ngIf="car.deposits.length > 0 && car.deposits[0].state === 'collected'">Vous pouvez recuperer votre voiture. Merci de votre confiance.</span>
@@ -60,7 +60,7 @@
                   <th mat-sort-header="state">Avancement</th>
                   <th mat-sort-header="amount">Montant</th>
                   <th mat-sort-header="payment">Etat</th>
-                  <th mat-sort-header="payment">Action</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,7 +111,7 @@
                   <th mat-sort-header="state">Avancement</th>
                   <th mat-sort-header="amount">Montant</th>
                   <th mat-sort-header="payment">Etat</th>
-                  <th mat-sort-header="payment">Action</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -162,7 +162,7 @@
                   <th mat-sort-header="state">Avancement</th>
                   <th mat-sort-header="amount">Montant</th>
                   <th mat-sort-header="payment">Etat</th>
-                  <th mat-sort-header="payment">Action</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import { take } from 'rxjs';
 import { APP_SERVICE_CONFIG } from 'src/app/appconfig/appconfig.service';
 import { Appconfig } from 'src/app/interfaces/appconfig.interface';
 import { Deposit } from 'src/app/models/Deposit.model';
@@ -10,12 +11,16 @@ import { Repair } from 'src/app/models/Repair.model';
 })
 export class RepairService {
   private url!: string;
+  private payUrl!: string;
+  private dateUrl!: string;
 
   constructor(
     @Inject(APP_SERVICE_CONFIG) private config: Appconfig,
     private http: HttpClient
   ) {
     this.url = config.apiEndpoint.concat("api/repair/");
+    this.payUrl = config.apiEndpoint.concat("api/paiement/");
+    this.dateUrl = config.apiEndpoint.concat("api/datereparation/");
   }
 
   addRepair(deposit: Deposit, repair: Repair){
@@ -42,6 +47,11 @@ export class RepairService {
       State: repair.state,
       paiement: 'done'
     }
+    const payData = {
+      montant: repair.amount,
+      repair_id: repair.ID
+    }
+    this.http.post(this.payUrl, payData).pipe(take(1)).subscribe(val => console.log(val));
     return this.http.put(this.url.concat('update/').concat(repair.ID), data);
   }
 
@@ -53,6 +63,7 @@ export class RepairService {
       State: 'done',
       paiement: repair.payment
     }
+    this.http.put(this.dateUrl.concat('updatedatefin'), {repair_id: repair.ID}).pipe(take(1)).subscribe(val => console.log(val));;
     return this.http.put(this.url.concat('update/').concat(repair.ID), data);
   }
 
@@ -64,6 +75,7 @@ export class RepairService {
       State: 'in_progress',
       paiement: repair.payment
     }
+    this.http.post(this.dateUrl.concat('create'), {repair_id: repair.ID}).pipe(take(1)).subscribe(val => console.log(val));;
     return this.http.put(this.url.concat('update/').concat(repair.ID), data);
   }
 

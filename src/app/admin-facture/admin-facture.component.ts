@@ -90,6 +90,7 @@ export class AdminFactureComponent {
                 if(nCar.deposits[0] && nCar.deposits[0].repairs.length > 0) this.cars.push(nCar);
               });
             }
+            this.spinner.hide();
           });
         });
       });
@@ -137,6 +138,7 @@ export class AdminFactureComponent {
                 console.log(this.cars);
               });
             }
+            this.spinner.hide();
           });
         });
       });
