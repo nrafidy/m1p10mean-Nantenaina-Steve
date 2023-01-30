@@ -42,7 +42,6 @@ export class AdminVoituresComponent implements OnInit, OnDestroy{
       if(user.type === 'res_atelier' || user.type === 'res_finance'){
         this.carService.getCars().pipe(take(1)).subscribe((val) => {
           lCars = [];
-          console.log(val);
           const value = JSON.parse(JSON.stringify(val));
           value.forEach((element: any) => {
             lCars.push({

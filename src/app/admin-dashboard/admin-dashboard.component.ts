@@ -30,20 +30,28 @@ export class AdminDashboardComponent {
   ngOnInit(){
     const date = new Date();
     const today = this.datePipe.transform(date, 'yyyy-MM-dd');
+    const month = this.datePipe.transform(date, 'MM');
+    const year = this.datePipe.transform(date, 'yyyy');
 
     this.statService.getCaDay(today as string).pipe(take(1)).subscribe(val => {
       this.caDay = JSON.parse(JSON.stringify(val)).total;
     });
 
-    this.statService.getCaMois(date.getMonth(), date.getFullYear()).pipe(take(1)).subscribe(val => {
+    this.statService.getCaMois(month as string, year as string).pipe(take(1)).subscribe(val => {
       this.caMonth = JSON.parse(JSON.stringify(val)).total;
+    });
+
+    this.statService.getMeanTime().pipe(take(1)).subscribe(val => {
+      this.repairTime = JSON.parse(JSON.stringify(val)).result;
     });
 
   }
 
   submitGain(){
     const date = new Date();
-    this.statService.getMonthGain(date.getMonth(), date.getFullYear(), this.salary, this.rent, this.buy, this.other).pipe(take(1)).subscribe(val => {
+    const month = this.datePipe.transform(date, 'MM');
+    const year = this.datePipe.transform(date, 'yyyy');
+    this.statService.getMonthGain(month as string, year as string, this.salary, this.rent, this.buy, this.other).pipe(take(1)).subscribe(val => {
       this.gain = JSON.parse(JSON.stringify(val)).total;
       console.log(val);
     });
