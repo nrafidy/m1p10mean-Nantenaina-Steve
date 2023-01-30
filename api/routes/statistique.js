@@ -137,9 +137,24 @@ router.get("/moyennereparation/:carid", async function (req, res) {
         console.log(err);
         return res.status(500).json({ message: "error while get statistique" });
     }
-    return res.status(200);
 });
 
+router.get("/reparationTotal", async function (req, res) {
+    try {
+        const db = await dbo.getDb();
+
+        const listeDeposit = await db.collection("dateReparation").find().toArray();
+        var total = 0.0;
+        for(let i =0 ;i<listeDeposit.length;i++) {
+            total += parseFloat(listeDeposit[i].duree);
+        }
+        return res.status(500).json({ result: total });
+    
+    }catch (err) { 
+        console.log(err);
+        return res.status(500).json({ message: "error while get statistique" });
+    }
+});
 
 
 module.exports = router;
