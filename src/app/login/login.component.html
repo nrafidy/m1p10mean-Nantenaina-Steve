@@ -73,6 +73,11 @@
           Se connecter
         </button>
       </form>
+      <div class="d-flex flex-column mt-3">
+        <span class="remplir" (click)="populateAsUser()">Remplir en tant que client</span>
+        <span class="remplir" (click)="populateAsAtelier()">Remplir en tant que responsable atelier</span>
+        <span class="remplir" (click)="populateAsFinance()">Remplir en tant que responsable finance</span>
+      </div>
     </div>
     <div class="modal-footer">
       <span>Vous n'avez pas encore de compte ? Inscrivez-vous.</span>

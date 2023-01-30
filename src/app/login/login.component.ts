@@ -87,4 +87,19 @@ export class LoginComponent {
       this.pageShown = 'signup-success';
     });
   }
+
+  populateAsUser(){
+    this.user.email = 'johndoe@test.com';
+    this.user.password = 'test1234';
+  }
+
+  populateAsAtelier(){
+    this.user.email = 'res_atelier@test.com';
+    this.user.password = 'res_atelier';
+  }
+
+  populateAsFinance(){
+    this.user.email = 'res_finance@test.com';
+    this.user.password = 'res_finance';
+  }
 }
