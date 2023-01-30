@@ -10,6 +10,7 @@ const carRoute = require("./routes/car");
 const imageKitRoute = require("./routes/imagekit");
 const repairRoute = require("./routes/reparation");
 const paiementRoute = require("./routes/paiement");
+const statistiqueRoute = require("./routes/statistique");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/api/deposit", depositRoute);
 app.use("/api/car", carRoute);
 app.use("/api/repair", repairRoute);
 app.use("/api/paiement", paiementRoute);
+app.use("/api/statistique", statistiqueRoute);
 
 dbo.connectToServer(function (err) {
   if (err) {
